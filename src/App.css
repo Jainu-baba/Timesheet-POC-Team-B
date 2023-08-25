@@ -37,3 +37,93 @@
 .select {
     height: 30px;
 }
+
+.time-sheet-box{
+    width:95%;
+    margin:auto;
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    gap:15px;
+    border:1px solid black;
+    padding:10px;
+    padding-top:15px;
+}
+
+.timesheet-grid-container{
+    padding:20px;;
+}
+
+.entry-selectbox{
+    display: block;
+    padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--input-c);
+    background-color: var(--input-bg);
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxNiAxNic+PHBhdGggZmlsbD0nbm9uZScgc3Ryb2tlPScjOGM4YzhjJyBzdHJva2UtbGluZWNhcD0ncm91bmQnIHN0cm9rZS1saW5lam9pbj0ncm91bmQnIHN0cm9rZS13aWR0aD0nMicgZD0nTTIgNWw2IDYgNi02Jy8+PC9zdmc+);
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 16px 12px;
+    border: 1px solid var(--input-b);
+    border-radius: 0.25rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 1px solid #c7c7c7;
+}
+
+.entry-input{
+    vertical-align: middle;
+    border-radius: 3px;
+    padding: 7px 5px;
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #c7c7c7;
+    font-size: 15px;
+    font-family: inherit;
+    line-height: 1.5;
+}
+
+
+.timesheet-button{
+    /* display: inline-flex;
+    justify-content: space-between;
+    align-items: center; */
+    border: 1px solid var(--btn-fa-b);
+    color: var(--btn-fa-c);
+    position: relative;
+    font-size: 14px;
+    padding: 6px 8px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-family: Arial,Helvetica,sans-serif;
+    background: linear-gradient(to bottom,var(--btn-fa-bg),var(--btn-fa-bga));
+    background-color: #f7f7f7;
+    padding:10px;
+    text-align: center;
+}
+
+.rs-btn-disabled{
+    background: #EEEEEE;
+    padding:10px;
+    text-align: center;
+    width:160px;
+}
+
+
+.w-30{
+    width: 52px;
+}
+
+.mb-20{
+    margin-bottom:20px;
+}
+
+.w-50{
+    width: 50px;
+    padding:10px;
+    text-align: center;
+}
+
