@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
-
+import Button from '@mui/material/Button';
 import { useState, useEffect } from 'react';
 import { Grid } from '@mui/material';
 import DateRange from './DateRange.json';
-
+import Stack from '@mui/material/Stack';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -37,8 +37,7 @@ export default function TimeSheet() {
         setSelectedDates(dateRanges[0]?.dates)
     }, []);
 
-    const handleEmployee = (empName) => {
-        //const empData = {[empName]: {[selectedRange.fromDate+'-'+selectedRange.toDate]:[]}};
+    const handleEmployee = (empName) => {      
         localStorage.setItem('employeeName', empName);
         localStorage.setItem(empName, '');
     }
@@ -54,36 +53,14 @@ export default function TimeSheet() {
     const handleDropdownChange = (event) => {
         const selectedIndex = event.target.value;
         setSelectedRange(dateRanges[selectedIndex]);
-        setSelectedDates(dateRanges[selectedIndex].dates);
-
-        
+        setSelectedDates(dateRanges[selectedIndex].dates);        
         const edata = dateRanges[selectedIndex].fromDate+'-'+dateRanges[selectedIndex].toDate;
         localStorage.setItem('dateRange', edata);
         const empName = localStorage.getItem('employeeName');
         let empData = localStorage.getItem(empName);
-
-        //const dateRange = [];
-        // if(empData && empData[dateRanges[selectedIndex]]){
-        //     dateRange = empData[dateRanges[selectedIndex]];
-        // }
-
-        //const edata = dateRanges[selectedIndex].fromDate+'-'+dateRanges[selectedIndex].toDate;
-       // console.log(edata);
-        empData = {[edata]: []};
- 
+        empData = {[edata]: []}; 
         localStorage.setItem(empName, JSON.stringify(empData));
-        // console.log(dateRanges[selectedIndex]);
-
-        // let startDate = new Date(dateRanges[selectedIndex].fromDate);
-        // let endDate = new Date(dateRanges[selectedIndex].toDate);
-        // const currentDate = new Date(startDate.getTime());
-        
-        // const dates = [];
-        // while (currentDate <= endDate) {
-        //     dates.push(new Date(currentDate));
-        //     currentDate.setDate(currentDate.getDate() + 1);
-        // }
-        // console.log(dates);
+    
     };
     return (
         <>
@@ -106,16 +83,11 @@ export default function TimeSheet() {
                             {range.fromDate} - {range.toDate}
                         </option>
                     ))}
-                </select>
-                {/* {selectedRange && (
-                    <div>
-                        Selected Range: {selectedRange.fromDate} - {selectedRange.toDate}
-                    </div>
-                )} */}
+                </select>               
             </Grid>
-            <Grid item xs>
-                <button onClick={submitData} className='timesheet-button'>submit</button>
-            </Grid>
+            <Grid item xs>         
+             <button onClick={submitData} className='timesheet-button'>submit</button> 
+            </Grid>          
         </Grid>
 
         <Grid container spacing={3} className='mb-20'>
