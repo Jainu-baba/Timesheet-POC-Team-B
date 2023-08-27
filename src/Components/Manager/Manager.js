@@ -7,6 +7,7 @@ import MuiAlert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import { DataGrid } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
+import { useState, useEffect } from 'react';
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -119,7 +120,10 @@ const Manager = () => {
   }
   var vertical = "top";
   var horizontal = "center";
-
+  useEffect(() => {
+   
+    localStorage.getItem('EmployeesData');
+}, []);
   return (
 
     <div className="overall-layout">
