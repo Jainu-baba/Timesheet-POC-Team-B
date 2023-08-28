@@ -16,9 +16,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 export default function TimeSheet() {
     
 
+    const [employeeName, setEmployeeName] = useState('');
     const [selectedRange, setSelectedRange] = useState(null);
     const [dateRanges, setDateRanges] = useState([]);
-    const [selectedDates, setSelectedDates] = useState([]);
+    const [selectedDates, setSelectedDates] = useState(['', '', '', '', '', '', '']);
 
     const [open, setOpen] = React.useState(false);
 
@@ -33,11 +34,14 @@ export default function TimeSheet() {
 
     useEffect(() => {
         setDateRanges(DateRange);
-        setSelectedRange(dateRanges[0]);
-        setSelectedDates(dateRanges[0]?.dates)
+        if(dateRanges && dateRanges.length > 0){
+            setSelectedRange(dateRanges[0]);
+            setSelectedDates(dateRanges[0]?.dates)
+        }
     }, []);
 
-    const handleEmployee = (empName) => {      
+    const handleEmployee = (empName) => {
+        setEmployeeName(empName);
         localStorage.setItem('employeeName', empName);
         localStorage.setItem(empName, '');
     }
@@ -47,6 +51,9 @@ export default function TimeSheet() {
         const empData = localStorage.getItem('empData');
         console.log(JSON.parse(empData));
         handleClickOpen();
+        setTimeout(() => {
+            handleClose();
+        }, 2000);
     }
 
 
@@ -64,7 +71,7 @@ export default function TimeSheet() {
     };
     return (
         <>
-        <Grid container spacing={4}  className='mb-20'>
+        <Grid container spacing={4}  className='mb-20' style={{margin:'auto', padding:'5px'}}>
             <Grid item xs>
                 <select className='entry-selectbox' onChange={(event) => handleEmployee(event.target.value)}>
                     <option>Employee Name</option>
@@ -86,11 +93,11 @@ export default function TimeSheet() {
                 </select>               
             </Grid>
             <Grid item xs>         
-             <button onClick={submitData} className='timesheet-button'>submit</button> 
+             <button onClick={submitData} disabled={!(employeeName && selectedRange) ? 'true' : ''} className='timesheet-button'>submit</button> 
             </Grid>          
         </Grid>
 
-        <Grid container spacing={3} className='mb-20'>
+        <Grid container spacing={3} className='mb-20'  style={{margin:'auto', padding:'5px'}}>
                     <Grid item xs={4}>
                         <Grid container spacing={3}>
                             <Grid item>
@@ -105,7 +112,7 @@ export default function TimeSheet() {
                         <Grid container spacing={2}>
                             {selectedDates && selectedDates.length > 0 && selectedDates.map((date) => {
                             return <Grid item>
-                                <div className="rs-btn-disabled w-30">{date}</div>
+                                <div className="rs-btn-disabled w-30">{date ?? ''}</div>
                             </Grid>
                             })}
                         </Grid>

@@ -54,8 +54,20 @@ const TimeSheetEntry = () => {
     }
 
     const removeRows = (index) => {
+        
         const rows = [...timeSheetRows];
        rows.splice(index, 1);
+
+       
+       setDay1Total(rows.reduce((total, row) => total + parseInt(row['day1']), 0));
+       setDay2Total(rows.reduce((total, row) => total + parseInt(row['day2']), 0));
+       setDay3Total(rows.reduce((total, row) => total + parseInt(row['day3']), 0));
+       setDay4Total(rows.reduce((total, row) => total + parseInt(row['day4']), 0));
+       setDay5Total(rows.reduce((total, row) => total + parseInt(row['day5']), 0));
+       setDay6Total(rows.reduce((total, row) => total + parseInt(row['day6']), 0));
+       setDay7Total(rows.reduce((total, row) => total + parseInt(row['day7']), 0));
+        
+
         setTimeSheetRows([...rows]);
         console.log(rows);
        
@@ -99,7 +111,7 @@ const TimeSheetEntry = () => {
     return (
         <>
             {timeSheetRows && timeSheetRows.length > 0 && timeSheetRows.map((row, index) => {
-                return <Grid container spacing={3} key={index}>
+                return <Grid container spacing={3} key={index} style={{margin:'auto', padding:'5px'}}>
                     <Grid item xs={4}>
                         <Grid container spacing={3}>
                             <Grid item>
@@ -181,12 +193,12 @@ const TimeSheetEntry = () => {
                 </Grid>
             })}
 
-            <Grid container>
+            <Grid container spacing={3} style={{margin:'auto', padding:'5px'}}>
                 <Grid item xs={12}>
                     <button type="button" onClick={() => addRow()} className='timesheet-button' style={{ width: '180px', textAlign: 'center' }}>Add Row</button>
                 </Grid>
             </Grid>
-            <Grid container spacing={3}>
+            <Grid container spacing={3} style={{margin:'auto', padding:'5px'}}>
                 <Grid item xs={4}>
 
                 </Grid>
