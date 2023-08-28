@@ -69,9 +69,9 @@ const Details = () => {
             </Stack>
           </Grid>
         </Grid>
-        <Grid>
+        
         <Employee />
-        </Grid>
+        
         <Grid>
     
         </Grid>
