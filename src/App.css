@@ -60,8 +60,10 @@
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
-    color: var(--input-c);
-    background-color: var(--input-bg);
+    /* color: var(--input-c); */
+    /* background-color: var(--input-bg); */
+    color:white;
+    background-color: #0099cc;
     background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxNiAxNic+PHBhdGggZmlsbD0nbm9uZScgc3Ryb2tlPScjOGM4YzhjJyBzdHJva2UtbGluZWNhcD0ncm91bmQnIHN0cm9rZS1saW5lam9pbj0ncm91bmQnIHN0cm9rZS13aWR0aD0nMicgZD0nTTIgNWw2IDYgNi02Jy8+PC9zdmc+);
     background-repeat: no-repeat;
     background-position: right 0.5rem center;
@@ -71,7 +73,8 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    border: 1px solid #c7c7c7;
+    border: 1px solid #c7c7c7; 
+    
 }
 
 .entry-input{
@@ -133,3 +136,18 @@
     text-align: center;
 }
 
+.entry-value{
+    vertical-align: middle;
+    border-radius: 3px;
+    padding: 7px 5px;
+    /* background-color: #fff;
+    color: #333; */
+    background: #EEEEEE;
+    border: 1px solid #c7c7c7;
+    font-size: 15px;
+    font-family: inherit;
+    line-height: 1.5;
+    width: 40px;
+    padding:10px;
+    text-align: center;
+}

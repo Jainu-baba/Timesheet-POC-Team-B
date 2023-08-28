@@ -187,7 +187,7 @@ const TimeSheetEntry = () => {
                         </Grid>
                     </Grid>
                     <Grid item xs={2}>
-                        <input disabled value={row['total']} onChange={(event) => changeTimeSheetData('total', index, event.target.value)} placeholder='Total' typ="text" className='entry-input w-50' />
+                        <input disabled value={row['total']} onChange={(event) => changeTimeSheetData('total', index, event.target.value)} placeholder='Total' typ="text" className='entry-value w-50' />
                     </Grid>
                 </Grid>
             })}
@@ -204,31 +204,31 @@ const TimeSheetEntry = () => {
                 <Grid item xs={6}>
                     <Grid container spacing={2}>
                         <Grid item>
-                            <input type='text' value={day1Total} onChange={(event)=>changeTimeSheetData('day1',  Math.min(event.target.value))} className='entry-input w-50' />
+                            <input type='text' value={day1Total}  className='entry-value w-50' />
                         </Grid>
                         <Grid item>
-                            <input type='text' value={day2Total} className='entry-input w-50' />
+                            <input type='text' value={day2Total} className='entry-value w-50' />
                         </Grid>
                         <Grid item>
-                            <input type='text' value={day3Total} className='entry-input w-50' />
+                            <input type='text' value={day3Total} className='entry-value w-50' />
                         </Grid>
                         <Grid item>
-                            <input type='text' value={day4Total} className='entry-input w-50' />
+                            <input type='text' value={day4Total} className='entry-value w-50' />
                         </Grid>
                         <Grid item>
-                            <input type='text' value={day5Total} className='entry-input w-50' />
+                            <input type='text' value={day5Total} className='entry-value w-50' />
                         </Grid>
                         <Grid item>
-                            <input type='text' value={day6Total} className='entry-input w-50' />
+                            <input type='text' value={day6Total} className='entry-value w-50' />
                         </Grid>
                         <Grid item>
-                            <input type='text' value={day7Total} className='entry-input w-50' />
+                            <input type='text' value={day7Total} className='entry-value w-50' />
                         </Grid>
                     </Grid>
 
                 </Grid>
                 <Grid item xs={2}>
-                    <input disabled typ="text" value={day1Total + day2Total + day3Total + day4Total + day5Total + day6Total + day7Total} className='entry-input w-50' />
+                    <input disabled typ="text" value={day1Total + day2Total + day3Total + day4Total + day5Total + day6Total + day7Total} className='entry-value w-50' />
                 </Grid>
             </Grid>
         </>
