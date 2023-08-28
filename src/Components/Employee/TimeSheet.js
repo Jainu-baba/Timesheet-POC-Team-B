@@ -46,10 +46,12 @@ export default function TimeSheet() {
         localStorage.setItem(empName, '');
     }
 
-    const submitData = () => {
-        const empName = localStorage.getItem('employeeName');
-        const empData = localStorage.getItem('empData');
+    const submitData = () => {        
+        const empData = localStorage.getItem("empData");    
         console.log(JSON.parse(empData));
+      let oldData = JSON.parse(localStorage.getItem('EmployeesData'));
+      oldData.push(empData);
+    localStorage.setItem('EmployeesData', JSON.stringify(oldData));    
         handleClickOpen();
         setTimeout(() => {
             handleClose();
@@ -65,7 +67,7 @@ export default function TimeSheet() {
         localStorage.setItem('dateRange', edata);
         const empName = localStorage.getItem('employeeName');
         let empData = localStorage.getItem(empName);
-        empData = {[edata]: []}; 
+       empData = {[edata]: []};     
         localStorage.setItem(empName, JSON.stringify(empData));
     
     };
