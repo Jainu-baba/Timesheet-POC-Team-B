@@ -13,6 +13,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 const Details = () => {
+  localStorage.setItem("role", 'manager');
   const naviagate = useNavigate();
   const BacktoManagerApprove = () => {
     settoastOpen(true);
@@ -63,10 +64,7 @@ const Details = () => {
         <Grid item xs={4}>
 
           <Grid item xs={6}>
-            <Stack direction="row" spacing={2}>
-              <Button variant="contained" color="success" onClick={(e) => BacktoManagerApprove()}>Approve</Button>
-              <Button variant="contained" color="error" onClick={(e) => BacktoManagerRejected()} >Reject</Button>
-            </Stack>
+            
           </Grid>
         </Grid>
         
