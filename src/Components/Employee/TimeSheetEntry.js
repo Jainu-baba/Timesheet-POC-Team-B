@@ -15,6 +15,7 @@ import jobData from "../../mock-data/job-codes.json";
 
 const TimeSheetEntry = () => {
 
+    const role = localStorage.getItem("role") ?? 'employee';
     const [projectCodes, setProjectCodes] = useState([]);
     const [jobCodes, setJobCodes] = useState([]);
     const [day1Total, setDay1Total] = useState(0);
@@ -129,6 +130,8 @@ const TimeSheetEntry = () => {
                                                 ...params.InputProps,
                                                 type: 'search',
                                             }}
+                                            aria-label={`Project Code for row ${index}`}
+                                            tabIndex={0}
                                         />
                                     )}
                                 />
@@ -150,6 +153,8 @@ const TimeSheetEntry = () => {
                                                 ...params.InputProps,
                                                 type: 'search',
                                             }}
+                                            aria-label={`Job Code for row ${index}`}
+                                            tabIndex={0}
                                         />
                                     )}
                                 />
@@ -159,42 +164,42 @@ const TimeSheetEntry = () => {
                     <Grid item xs={6}>
                         <Grid container spacing={2}>
                             <Grid item>
-                                <input typ="text" value={Math.min(row['day1'], 16)} onChange={(event) => changeTimeSheetData('day1', index, Math.min(event.target.value, 16))} className='entry-input w-50' />
+                                <input typ="text" value={Math.min(row['day1'], 16)} onChange={(event) => changeTimeSheetData('day1', index, Math.min(event.target.value, 16))} className='entry-input w-50' aria-label={`Day 1 for row ${index}`} role="textbox"/>
                             </Grid>
                             <Grid item>
-                                <input typ="text" value={Math.min(row['day2'], 16)} onChange={(event) => changeTimeSheetData('day2', index, Math.min(event.target.value, 16))} className='entry-input w-50' />
+                                <input typ="text" value={Math.min(row['day2'], 16)} onChange={(event) => changeTimeSheetData('day2', index, Math.min(event.target.value, 16))} className='entry-input w-50' aria-label={`Day 2 for row ${index}`} role="textbox"/>
                             </Grid>
                             <Grid item>
-                                <input typ="text" value={Math.min(row['day3'], 16)} onChange={(event) => changeTimeSheetData('day3', index, Math.min(event.target.value, 16))} className='entry-input w-50' />
+                                <input typ="text" value={Math.min(row['day3'], 16)} onChange={(event) => changeTimeSheetData('day3', index, Math.min(event.target.value, 16))} className='entry-input w-50' aria-label={`Day 3 for row ${index}`} role="textbox"/>
                             </Grid>
                             <Grid item>
-                                <input typ="text" value={Math.min(row['day4'], 16)} onChange={(event) => changeTimeSheetData('day4', index, Math.min(event.target.value, 16))} className='entry-input w-50' />
+                                <input typ="text" value={Math.min(row['day4'], 16)} onChange={(event) => changeTimeSheetData('day4', index, Math.min(event.target.value, 16))} className='entry-input w-50' aria-label={`Day 4 for row ${index}`} role="textbox"/>
                             </Grid>
                             <Grid item>
-                                <input typ="text" value={Math.min(row['day5'], 16)} onChange={(event) => changeTimeSheetData('day5', index, Math.min(event.target.value, 16))} className='entry-input w-50' />
+                                <input typ="text" value={Math.min(row['day5'], 16)} onChange={(event) => changeTimeSheetData('day5', index, Math.min(event.target.value, 16))} className='entry-input w-50' aria-label={`Day 5 for row ${index}`} role="textbox"/>
                             </Grid>
                             <Grid item>
-                                <input typ="text" value={Math.min(row['day6'], 16)} onChange={(event) => changeTimeSheetData('day6', index, Math.min(event.target.value, 16))} className='entry-input w-50' />
+                                <input typ="text" value={Math.min(row['day6'], 16)} onChange={(event) => changeTimeSheetData('day6', index, Math.min(event.target.value, 16))} className='entry-input w-50' aria-label={`Day 6 for row ${index}`} role="textbox"/>
                             </Grid>
                             <Grid item>
-                                <input typ="text" value={Math.min(row['day7'], 16)} onChange={(event) => changeTimeSheetData('day7', index, Math.min(event.target.value, 16))} className='entry-input w-50' />
+                                <input typ="text" value={Math.min(row['day7'], 16)} onChange={(event) => changeTimeSheetData('day7', index, Math.min(event.target.value, 16))} className='entry-input w-50' aria-label={`Day 7 for row ${index}`} role="textbox"/>
 
                             </Grid>
                             <Grid item>
-                                <FaRegTrashAlt onClick={() => removeRows(index)} />
+                            {role !== 'manager' && <FaRegTrashAlt onClick={() => removeRows(index)} role="button" tabIndex={0} aria-label={`Remove row ${index}`}/>}
                             </Grid>
 
                         </Grid>
                     </Grid>
                     <Grid item xs={2}>
-                        <input disabled value={row['total']} onChange={(event) => changeTimeSheetData('total', index, event.target.value)} placeholder='Total' typ="text" className='entry-value w-50' />
+                        <input disabled value={row['total']} onChange={(event) => changeTimeSheetData('total', index, event.target.value)} placeholder='Total' typ="text" className='entry-value w-50' aria-label={`Total for row ${index}`}/>
                     </Grid>
                 </Grid>
             })}
 
             <Grid container spacing={3} style={{margin:'auto', padding:'5px'}}>
                 <Grid item xs={12}>
-                    <button type="button" onClick={() => addRow()} className='timesheet-button' style={{ width: '180px', textAlign: 'center' }}>Add Row</button>
+                {role !== 'manager' && <button type="button" onClick={() => addRow()} className='timesheet-button' aria-label="Add Row Button" style={{ width: '180px', textAlign: 'center' }}>Add Row</button>}
                 </Grid>
             </Grid>
             <Grid container spacing={3} style={{margin:'auto', padding:'5px'}}>
@@ -204,31 +209,31 @@ const TimeSheetEntry = () => {
                 <Grid item xs={6}>
                     <Grid container spacing={2}>
                         <Grid item>
-                            <input type='text' value={day1Total}  className='entry-value w-50' />
+                            <input type='text' value={day1Total}  className='entry-value w-50' aria-label="Day 1 Total" role="cell"/>
                         </Grid>
                         <Grid item>
-                            <input type='text' value={day2Total} className='entry-value w-50' />
+                            <input type='text' value={day2Total} className='entry-value w-50' aria-label="Day 2 Total" role="cell"/>
                         </Grid>
                         <Grid item>
-                            <input type='text' value={day3Total} className='entry-value w-50' />
+                            <input type='text' value={day3Total} className='entry-value w-50' aria-label="Day 3 Total" role="cell"/>
                         </Grid>
                         <Grid item>
-                            <input type='text' value={day4Total} className='entry-value w-50' />
+                            <input type='text' value={day4Total} className='entry-value w-50' aria-label="Day 4 Total" role="cell"/>
                         </Grid>
                         <Grid item>
-                            <input type='text' value={day5Total} className='entry-value w-50' />
+                            <input type='text' value={day5Total} className='entry-value w-50' aria-label="Day 5 Total" role="cell"/>
                         </Grid>
                         <Grid item>
-                            <input type='text' value={day6Total} className='entry-value w-50' />
+                            <input type='text' value={day6Total} className='entry-value w-50' aria-label="Day 6 Total" role="cell"/>
                         </Grid>
                         <Grid item>
-                            <input type='text' value={day7Total} className='entry-value w-50' />
+                            <input type='text' value={day7Total} className='entry-value w-50' aria-label="Day 7 Total" role="cell"/>
                         </Grid>
                     </Grid>
 
                 </Grid>
                 <Grid item xs={2}>
-                    <input disabled typ="text" value={day1Total + day2Total + day3Total + day4Total + day5Total + day6Total + day7Total} className='entry-value w-50' />
+                    <input disabled typ="text" value={day1Total + day2Total + day3Total + day4Total + day5Total + day6Total + day7Total} className='entry-value w-50'  aria-label="Total Sum" />
                 </Grid>
             </Grid>
         </>

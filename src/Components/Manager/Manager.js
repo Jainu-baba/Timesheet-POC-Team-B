@@ -31,6 +31,7 @@ const trigger = (row, e) => {
 }
 
 const Manager = () => {
+  localStorage.setItem("role", 'manager');
   const columns = [
     { field: 'id', headerName: 'Emp code', width: 90 },
     { field: 'jobCode', headerName: 'job Code', width: 90 },
