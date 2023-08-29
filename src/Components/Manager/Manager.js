@@ -62,10 +62,10 @@ const Manager = () => {
       width: 100,
       valueGetter: (params) =>
         `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-      renderCell: (params) => {
+      renderCell: (param) => {
         return (
 
-          <Button onClick={(e) => detailView()}><RemoveRedEyeIcon /></Button>
+          <Button onClick={(e) => detailView(param)}><RemoveRedEyeIcon /></Button>
         );
       }
     },
@@ -87,14 +87,16 @@ const Manager = () => {
     },
   ];
   const naviagate = useNavigate();
-  const detailView = () => {
-    naviagate("/details")
+  const detailView = (param) => {
+    naviagate(`/details/${param.row.empName}`);
 
   }
   const [selectedRows, setSelectedRows] = React.useState([]);
+  const [rowsData, setrowsData] = React.useState(rows);
   const [toastOpen, settoastOpen] = React.useState(false);
   const [rejectoast, setrejectoast] = React.useState(false);
   const [disableButtons, setdisableButtons] = React.useState(true);
+  const [selectedDates, setselectedDates] = React.useState("");
 
 
   const handleClose = (event, reason) => {
@@ -147,16 +149,12 @@ const Manager = () => {
    
     const data = JSON.parse(localStorage.getItem('EmployeesData'));
     data.forEach((e, i )=> {
-      let strinfy = JSON.parse(e);
-      console.log(strinfy);
-      console.log(Object.values(Object.values(strinfy)[0]));
+      let strinfy = JSON.parse(e);    
+      setselectedDates(Object.keys(Object.values(strinfy)[0])[0]);  
       let arrayData = Object.values(Object.values(strinfy)[0]);
-      rows = arrayData[0].map((obj, index) => {obj["id"] = index;obj["empName"] = Object.keys(strinfy)[0]; return obj} );
-      var formData = {name: Object.keys(strinfy)[0], date: Object.keys(Object.values(strinfy)[0])[0],
-
-      }
-    })
-    console.log("data", data);
+     let rowsArray = arrayData[0].map((obj, index) => {obj["id"] = index;obj["empName"] = Object.keys(strinfy)[0]; return obj} );
+     setrowsData(rowsArray);     
+    })  
 }, []);
   return (
 
@@ -174,8 +172,8 @@ const Manager = () => {
 
       <div className="wrapper">
         <div className="align-header">
-          <select disabled className="select">
-            <option value="">31-07-2023 - 07-08-2023</option>
+          <select disabled className="select" value={selectedDates}>
+            <option value="">{selectedDates}</option>
           </select>
         </div>
         <div className="align-buttons">
@@ -193,7 +191,7 @@ const Manager = () => {
         <Box sx={{ height: 400, width: '100%' }}>
           <DataGrid
             checkboxSelection
-            rows={rows}
+            rows={rowsData}
             columns={columns}
             initialState={{
               pagination: {

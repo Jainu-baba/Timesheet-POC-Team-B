@@ -6,11 +6,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Grid } from '@mui/material';
 import DateRange from './DateRange.json';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
@@ -26,7 +21,8 @@ export default function TimeSheet() {
     const [dateRanges, setDateRanges] = useState([]);
     const [selectedDates, setSelectedDates] = useState(['', '', '', '', '', '', '']);
 
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(false);   
+    const [selectedDate, setselectedDate] = React.useState(null);
     var vertical = "top";
     var horizontal = "center";
     const [toastOpen, settoastOpen] = React.useState(false);
@@ -55,11 +51,26 @@ export default function TimeSheet() {
 
     useEffect(() => {
         setDateRanges(DateRange);
+        if(!window.location.href.includes("details")) {
+            localStorage.setItem('EmployeesData', JSON.stringify([]));
+        }
+        
         if (dateRanges && dateRanges.length > 0) {
             setSelectedRange(dateRanges[0]);
             setSelectedDates(dateRanges[0]?.dates)
         };
-        localStorage.setItem('EmployeesData', JSON.stringify([]));
+        if (window.location.href.includes("details")) {        
+         const employeesData= JSON.parse(localStorage.getItem('EmployeesData'));
+         const pathname = window.location.pathname;
+         const name = pathname.split("/")[2];
+         setEmployeeName(name);
+         console.log(employeesData);    
+       let date = employeesData.length && Object.values(JSON.parse(employeesData[0]))[0].dateIndex;
+       setselectedDate(date);
+       
+        };
+      
+      
     }, []);
 
     const handleEmployee = (empName) => {
@@ -99,7 +110,8 @@ export default function TimeSheet() {
         localStorage.setItem('dateRange', edata);
         const empName = localStorage.getItem('employeeName');
         let empData = localStorage.getItem(empName);
-        empData = { [edata]: [] };
+        localStorage.setItem('selectedDateRangeIndex', selectedIndex);
+        empData = { [edata]: []};
         localStorage.setItem(empName, JSON.stringify(empData));
 
     };
@@ -115,9 +127,14 @@ export default function TimeSheet() {
                     Rejected successfully
                 </Alert>
             </Snackbar>
+            <Snackbar anchorOrigin={{ vertical, horizontal }} open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+         Submitted timesheet
+        </Alert>
+      </Snackbar>
             <Grid container spacing={4} className='mb-20' style={{ margin: 'auto', padding: '5px' }}>
                 <Grid item xs>
-                    <select className='entry-selectbox' onChange={(event) => handleEmployee(event.target.value)} aria-label="Select Employee">
+                    <select className='entry-selectbox' value={employeeName} onChange={(event) => handleEmployee(event.target.value)} aria-label="Select Employee">
                         <option>Employee Name</option>
                         <option>Bhargavi</option>
                         <option>Karthik</option>
@@ -127,7 +144,7 @@ export default function TimeSheet() {
                     </select>
                 </Grid>
                 <Grid item xs={role === 'manager' ? 6 : 8}>
-                    <select className='entry-selectbox' onChange={handleDropdownChange} aria-label="Select Date Range">
+                    <select className='entry-selectbox' value={selectedDate} onChange={handleDropdownChange} aria-label="Select Date Range">
                         <option value={null}>Select a date range</option>
                         {dateRanges.map((range, index) => (
                             <option key={index} value={index}>
@@ -169,23 +186,6 @@ export default function TimeSheet() {
                     <div className="rs-btn-disabled w-50" aria-label="Total" role="cell">total</div>
                 </Grid>
             </Grid>
-
-
-
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Data Saved Successfully!
-                    </DialogContentText>
-                </DialogContent>
-            </Dialog>
 
         </>
     );

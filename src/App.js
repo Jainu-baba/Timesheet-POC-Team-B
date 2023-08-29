@@ -16,6 +16,7 @@ function App() {
         <Route path="/manager" element={<Manager/>} />
         <Route path="/" exact element={<Home/>} />
         <Route path="/details"  element={<Details/>} />
+        <Route path="/details/:id" element={<Details/>} />  
       </Routes>
     </BrowserRouter>
   );

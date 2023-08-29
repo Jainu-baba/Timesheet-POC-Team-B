@@ -99,9 +99,10 @@ const TimeSheetEntry = () => {
         const empName = localStorage.getItem('employeeName');
         console.log(empName);
         const dateRange = localStorage.getItem('dateRange');
+        const dateIndex = localStorage.getItem('selectedDateRangeIndex');
            if(empName && dateRange){
-                const empData = {[empName]: {[dateRange]:rows}};
-                console.log(empData);
+                const empData = {[empName]: {[dateRange]:rows, dateIndex: dateIndex}};
+             
                 localStorage.setItem("empData", JSON.stringify(empData))
 
            } 
