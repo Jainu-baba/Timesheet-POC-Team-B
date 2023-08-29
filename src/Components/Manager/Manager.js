@@ -14,16 +14,9 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 
 
-const rows = [
-  { id: 1, EmpCode: 1, EmpName: 'Snow', ProjectCode: 'Jon', TotalHours: 35, ViewDetails: "", Comments: "" },
-  { id: 2, EmpCode: 2, EmpName: 'Snow', ProjectCode: 'Jon', TotalHours: 35, ViewDetails: "", Comments: "" },
-  { id: 3, EmpCode: 3, EmpName: 'Snow', ProjectCode: 'Jon', TotalHours: 35, ViewDetails: "", Comments: "" },
-  { id: 4, EmpCode: 4, EmpName: 'Snow', ProjectCode: 'Jon', TotalHours: 35, ViewDetails: "", Comments: "" },
-  { id: 5, EmpCode: 5, EmpName: 'Snow', ProjectCode: 'Jon', TotalHours: 35, ViewDetails: "", Comments: "" },
-  { id: 6, EmpCode: 6, EmpName: 'Snow', ProjectCode: 'Jon', TotalHours: 35, ViewDetails: "", Comments: "" },
-  { id: 7, EmpCode: 7, EmpName: 'Snow', ProjectCode: 'Jon', TotalHours: 35, ViewDetails: "", Comments: "" },
-  { id: 8, EmpCode: 8, EmpName: 'Snow', ProjectCode: 'Jon', TotalHours: 35, ViewDetails: "", Comments: "" },
-  { id: 9, EmpCode: 9, EmpName: 'Snow', ProjectCode: 'Jon', TotalHours: 35, ViewDetails: "", Comments: "" },
+var rows = [
+  { id: 1, jobCode: "Testing", empName: "jain", projectCode: 'WFS_1101',  total: 35, ViewDetails: "", Comments: "" },
+ 
 ];
 
 
@@ -40,21 +33,21 @@ const trigger = (row, e) => {
 const Manager = () => {
   const columns = [
     { field: 'id', headerName: 'Emp code', width: 90 },
-    { field: 'EmpCode', headerName: 'Emp code', width: 90 },
+    { field: 'jobCode', headerName: 'job Code', width: 90 },
     {
-      field: 'EmpName',
+      field: 'empName',
       headerName: 'Emp Name',
       width: 150,
       editable: true,
     },
     {
-      field: 'ProjectCode',
+      field: 'projectCode',
       headerName: 'Project Code',
       width: 150,
       editable: true,
     },
     {
-      field: 'TotalHours',
+      field: 'total',
       headerName: 'Total Hours',
       type: 'number',
       width: 110,
@@ -65,7 +58,7 @@ const Manager = () => {
       headerName: 'View Details',
       description: 'This column has a value getter and is not sortable.',
       sortable: false,
-      width: 160,
+      width: 100,
       valueGetter: (params) =>
         `${params.row.firstName || ''} ${params.row.lastName || ''}`,
       renderCell: (params) => {
@@ -86,8 +79,8 @@ const Manager = () => {
       renderCell: (params) => {
         return (
 
-          <input type="text" onChange={(e, i) => trigger(params, e)} />
-
+          <input type="text" style={{width: "100%"}} onChange={(e, i) => trigger(params, e)} />
+          
         );
       }
     },
@@ -100,6 +93,7 @@ const Manager = () => {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [toastOpen, settoastOpen] = React.useState(false);
   const [rejectoast, setrejectoast] = React.useState(false);
+  const [disableButtons, setdisableButtons] = React.useState(true);
 
 
   const handleClose = (event, reason) => {
@@ -110,31 +104,70 @@ const Manager = () => {
     setrejectoast(false);
   };
   const apply = () => {
+    var newRows = [];
     settoastOpen(true);
+    rows.forEach((row, i) => {
+      selectedRows.forEach((e, id) => {
+
+        if(e.id !== row.id) {
+          newRows.push(e);
+        }
+       
+      }
+       )
+    } 
+    
+    );
+    rows = newRows
 
   }
 
   const reject = () => {
+    var Rows = [];
     setrejectoast(true);
+    rows.forEach((row, i) => {
+      selectedRows.forEach((e, id) => {
+
+        if(e.id !== row.id) {
+          Rows.push(e);
+        }
+       
+      }
+       )
+    } 
+    
+    );
+    rows = Rows
 
   }
   var vertical = "top";
   var horizontal = "center";
   useEffect(() => {
    
-    localStorage.getItem('EmployeesData');
+    const data = JSON.parse(localStorage.getItem('EmployeesData'));
+    data.forEach((e, i )=> {
+      let strinfy = JSON.parse(e);
+      console.log(strinfy);
+      console.log(Object.values(Object.values(strinfy)[0]));
+      let arrayData = Object.values(Object.values(strinfy)[0]);
+      rows = arrayData[0].map((obj, index) => {obj["id"] = index;obj["empName"] = Object.keys(strinfy)[0]; return obj} );
+      var formData = {name: Object.keys(strinfy)[0], date: Object.keys(Object.values(strinfy)[0])[0],
+
+      }
+    })
+    console.log("data", data);
 }, []);
   return (
 
     <div className="overall-layout">
       <Snackbar anchorOrigin={{ vertical, horizontal }} open={toastOpen} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-          Applied {selectedRows.map(e => e.EmpName).toString()}
+          Approved {selectedRows.map(e => e.EmpName).toString()}
         </Alert>
       </Snackbar>
       <Snackbar anchorOrigin={{ vertical, horizontal }} open={rejectoast} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="warning" sx={{ width: '100%' }}>
-          Applied {selectedRows.map(e => e.EmpName).toString()}
+          Rejected {selectedRows.map(e => e.EmpName).toString()}
         </Alert>
       </Snackbar>
 
@@ -147,8 +180,8 @@ const Manager = () => {
         <div className="align-buttons">
           <div>
             <Stack direction="row" spacing={2}>
-              <Button variant="contained" color="success" onClick={apply}>Approve</Button>
-              <Button variant="contained" color="error" onClick={reject}>Reject</Button>
+              <Button variant="contained" disabled={disableButtons} color="success" onClick={apply}>Approve</Button>
+              <Button variant="contained" disabled={disableButtons} color="error" onClick={reject}>Reject</Button>
             </Stack>
           </div>
           <div>
@@ -176,6 +209,7 @@ const Manager = () => {
               );
 
               setSelectedRows(selectedRows);
+              setdisableButtons(((selectedRows.length > 0) ? false : true));
             }}
             pageSizeOptions={[5]}
 

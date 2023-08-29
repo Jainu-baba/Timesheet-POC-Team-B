@@ -37,7 +37,8 @@ export default function TimeSheet() {
         if(dateRanges && dateRanges.length > 0){
             setSelectedRange(dateRanges[0]);
             setSelectedDates(dateRanges[0]?.dates)
-        }
+        };
+        localStorage.setItem('EmployeesData', JSON.stringify([]));
     }, []);
 
     const handleEmployee = (empName) => {
