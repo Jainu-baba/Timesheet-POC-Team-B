@@ -146,8 +146,7 @@ const Manager = () => {
     
     );
     setrowsData(Rows);
-    //rowsData = Rows
-
+  
   }
   var vertical = "top";
   var horizontal = "center";
