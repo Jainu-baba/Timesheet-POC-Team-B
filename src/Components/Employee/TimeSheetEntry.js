@@ -17,6 +17,7 @@ const TimeSheetEntry = () => {
 
     const role = localStorage.getItem("role") ?? 'employee';
     const [projectCodes, setProjectCodes] = useState([]);
+    const [comments,setComments] = useState('');
     const [jobCodes, setJobCodes] = useState([]);
     const [day1Total, setDay1Total] = useState(0);
     const [day2Total, setDay2Total] = useState(0);
@@ -240,6 +241,9 @@ const TimeSheetEntry = () => {
                 </Grid>
                 <Grid item xs={2}>
                     <input disabled typ="text" value={day1Total + day2Total + day3Total + day4Total + day5Total + day6Total + day7Total} className='entry-value w-50'  aria-label="Total Sum" />
+                </Grid>
+                <Grid item>
+                <TextField  sx={{width:'435%'}} id="outlined-basic" label="comments"  value={comments} variant="outlined" onChange={(e)=>setComments(e.target.value)} />
                 </Grid>
             </Grid>
         </>
