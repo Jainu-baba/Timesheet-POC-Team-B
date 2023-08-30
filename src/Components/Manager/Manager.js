@@ -91,6 +91,7 @@ const Manager = () => {
   ];
   const naviagate = useNavigate();
   const detailView = (param) => {
+    localStorage.setItem("details", param.row.id);
     naviagate(`/details/${param.row.empName}`);
 
   }
@@ -158,7 +159,15 @@ const Manager = () => {
       setselectedDates(Object.keys(Object.values(strinfy)[0])[0]);  
       let arrayData = Object.values(Object.values(strinfy)[0]);
      let rowsArray = arrayData[0].map((obj, index) => {obj["id"] = index;obj["empName"] = Object.keys(strinfy)[0]; return obj} );
-     setrowsData(rowsArray);     
+     if(localStorage.getItem("approved")) {
+      let removeItem = localStorage.getItem("details");
+
+    let sorted =   rowsArray.filter((e, i) => e.id !== Number(removeItem));
+      setrowsData(sorted); 
+     } else {
+      setrowsData(rowsArray);
+     }
+          
     })  
 }, []);
   return (

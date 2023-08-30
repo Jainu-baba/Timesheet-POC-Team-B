@@ -18,8 +18,6 @@ const Details = () => {
   const BacktoManagerApprove = () => {
     settoastOpen(true);
     setTimeout(() => naviagate("/manager"), 1000);
-    
-
   }  
   const BacktoManagerRejected = () => {
     setrejectoast(true);

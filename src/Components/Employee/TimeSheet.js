@@ -29,14 +29,18 @@ export default function TimeSheet() {
     const [rejectoast, setrejectoast] = React.useState(false);
 
     const BacktoManagerApprove = () => {
+        localStorage.setItem("approved", true);
         settoastOpen(true);
         setTimeout(() => naviagate("/manager"), 1000);
+       
 
 
     }
     const BacktoManagerRejected = () => {
         setrejectoast(true);
         setTimeout(() => naviagate("/manager"), 1000);
+        localStorage.setItem("approved", true);
+
 
     }
 
