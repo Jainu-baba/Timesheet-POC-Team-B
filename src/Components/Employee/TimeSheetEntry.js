@@ -121,28 +121,34 @@ const TimeSheetEntry = () => {
                     <Grid item xs={4}>
                         <Grid container spacing={3}>
                             <Grid item>
-                                <Autocomplete
-                                    disableClearable
-                                    sx={{ width: 180 }}
-                                    options={projectCodes.map((option) => option.code)}
-                                    onChange={(event, value) => changeTimeSheetData('projectCode', index, value)}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            className='entry-input entry-auto-suggest'
-                                            value={row['projectCode']}
-                                            label="Project Code"
-                                            InputProps={{
-                                                ...params.InputProps,
-                                                type: 'search',
-                                            }}
-                                            aria-label={`Project Code for row ${index}`}
-                                            tabIndex={0}
-                                        />
-                                    )}
-                                />
+                            {role === 'manager' &&  <input typ="text" disabled value={row['projectCode']}  style={{height: "35px"}} role="textbox"/>}
+                            {role !== 'manager' &&  
+                             <Autocomplete
+                             disableClearable
+                             sx={{ width: 180 }}
+                             options={projectCodes.map((option) => option.code)}
+                             onChange={(event, value) => changeTimeSheetData('projectCode', index, value)}
+                             renderInput={(params) => (
+                                 <TextField
+                                     {...params}
+                                     className='entry-input entry-auto-suggest'
+                                     value={row['projectCode']}
+                                     label="Project Code"
+                                     InputProps={{
+                                         ...params.InputProps,
+                                         type: 'search',
+                                     }}
+                                     aria-label={`Project Code for row ${index}`}
+                                     tabIndex={0}
+                                 />
+                             )}
+                         />}
+                           
+                              
                             </Grid>
                             <Grid item>
+                            {role === 'manager' &&  <input typ="text" value={row['jobCode']}  disabled style={{height: "35px"}} role="textbox"/>}
+                            {role !== 'manager' &&  
                                 <Autocomplete
                                     disableClearable
                                     sx={{ width: 180 }}
@@ -164,6 +170,7 @@ const TimeSheetEntry = () => {
                                         />
                                     )}
                                 />
+                                        }
                             </Grid>
                         </Grid>
                     </Grid>
