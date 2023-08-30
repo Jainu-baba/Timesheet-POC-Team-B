@@ -44,7 +44,10 @@ Item.propTypes = {
 };
 
 export default function Employee() {
-  localStorage.setItem("role", 'employee');
+  if(window.location.href.split("/").includes("employee")) {
+    localStorage.setItem("role", 'employee');
+  }
+  
 
   return (
     <div className='time-sheet-box'>

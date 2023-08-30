@@ -37,6 +37,13 @@ const TimeSheetEntry = () => {
              let timesheetData =   Object.values(Object.values(JSON.parse(employeesData[0]))[0])[0];
              setTimeSheetRows(timesheetData);
             }
+            setDay1Total(timeSheetRows.reduce((total, row) => total + parseInt(row['day1']), 0));
+            setDay2Total(timeSheetRows.reduce((total, row) => total + parseInt(row['day2']), 0));
+            setDay3Total(timeSheetRows.reduce((total, row) => total + parseInt(row['day3']), 0));
+            setDay4Total(timeSheetRows.reduce((total, row) => total + parseInt(row['day4']), 0));
+            setDay5Total(timeSheetRows.reduce((total, row) => total + parseInt(row['day5']), 0));
+            setDay6Total(timeSheetRows.reduce((total, row) => total + parseInt(row['day6']), 0));
+            setDay7Total(timeSheetRows.reduce((total, row) => total + parseInt(row['day7']), 0));
         }
        
      
