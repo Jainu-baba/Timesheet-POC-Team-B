@@ -55,6 +55,7 @@ export default function TimeSheet() {
 
     useEffect(() => {
         setDateRanges(DateRange);
+        localStorage.setItem("approved", false);
         if(!window.location.href.includes("details")) {
             localStorage.setItem('EmployeesData', JSON.stringify([]));
         }

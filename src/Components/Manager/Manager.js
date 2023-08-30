@@ -159,7 +159,7 @@ const Manager = () => {
       setselectedDates(Object.keys(Object.values(strinfy)[0])[0]);  
       let arrayData = Object.values(Object.values(strinfy)[0]);
      let rowsArray = arrayData[0].map((obj, index) => {obj["id"] = index;obj["empName"] = Object.keys(strinfy)[0]; return obj} );
-     if(localStorage.getItem("approved")) {
+     if(localStorage.getItem("approved") === "true") {
       let removeItem = localStorage.getItem("details");
 
     let sorted =   rowsArray.filter((e, i) => e.id !== Number(removeItem));
