@@ -128,7 +128,7 @@ const TimeSheetEntry = () => {
                                     options={projectCodes.map((option) => option.code)}
                                     onChange={(event, value) => changeTimeSheetData('projectCode', index, value)}
                                     renderInput={(params) => (
-                                        <TextField
+                                         <TextField
                                             {...params}
                                             className='entry-input entry-auto-suggest'
                                             value={row['projectCode']}
@@ -139,9 +139,13 @@ const TimeSheetEntry = () => {
                                             }}
                                             aria-label={`Project Code for row ${index}`}
                                             tabIndex={0}
+                                            
                                         />
+                                        
                                     )}
                                 />
+                               
+                                
                             </Grid>
                             <Grid item>
                                 <Autocomplete
@@ -163,7 +167,9 @@ const TimeSheetEntry = () => {
                                             aria-label={`Job Code for row ${index}`}
                                             tabIndex={0}
                                         />
+                                       
                                     )}
+                                    
                                 />
                             </Grid>
                         </Grid>
@@ -243,7 +249,7 @@ const TimeSheetEntry = () => {
                     <input disabled typ="text" value={day1Total + day2Total + day3Total + day4Total + day5Total + day6Total + day7Total} className='entry-value w-50'  aria-label="Total Sum" />
                 </Grid>
                 <Grid item>
-                <TextField  sx={{width:'435%'}} id="outlined-basic" label="comments"  value={comments} variant="outlined" onChange={(e)=>setComments(e.target.value)} />
+                {role == 'manager' && <TextField  sx={{width:'435%'}} id="outlined-basic" label="comments"  value={comments} variant="outlined" onChange={(e)=>setComments(e.target.value)} />}
                 </Grid>
             </Grid>
         </>
