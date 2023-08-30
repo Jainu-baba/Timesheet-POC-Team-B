@@ -18,7 +18,7 @@ export default function TimeSheet() {
     const role = localStorage.getItem("role") ?? 'employee';
     const [employeeName, setEmployeeName] = useState('');
     const [selectedRange, setSelectedRange] = useState(null);
-    const [dateRanges, setDateRanges] = useState([]);
+    const [dateRanges, setDateRanges] = useState(DateRange);
     const [selectedDates, setSelectedDates] = useState(['', '', '', '', '', '', '']);
 
     const [open, setOpen] = React.useState(false);   
@@ -55,10 +55,10 @@ export default function TimeSheet() {
             localStorage.setItem('EmployeesData', JSON.stringify([]));
         }
         
-        if (dateRanges && dateRanges.length > 0) {
-            setSelectedRange(dateRanges[0]);
-            setSelectedDates(dateRanges[0]?.dates)
-        };
+        // if (dateRanges && dateRanges.length > 0) {
+        //     setSelectedRange(dateRanges[0]);
+        //     setSelectedDates(dateRanges[0]?.dates)
+        // };
         if (window.location.href.includes("details")) {        
          const employeesData= JSON.parse(localStorage.getItem('EmployeesData'));
          const pathname = window.location.pathname;
@@ -67,7 +67,8 @@ export default function TimeSheet() {
          console.log(employeesData);    
        let date = employeesData.length && Object.values(JSON.parse(employeesData[0]))[0].dateIndex;
        setselectedDate(date);
-       
+       setSelectedRange(dateRanges[date]);
+       setSelectedDates(dateRanges[date]?.dates)
         };
       
       

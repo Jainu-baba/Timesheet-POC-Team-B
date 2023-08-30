@@ -121,7 +121,8 @@ const Manager = () => {
     } 
     
     );
-    rows = newRows
+    setrowsData(newRows);
+   // rowsData = newRows
 
   }
 
@@ -140,7 +141,8 @@ const Manager = () => {
     } 
     
     );
-    rows = Rows
+    setrowsData(Rows);
+    //rowsData = Rows
 
   }
   var vertical = "top";
@@ -202,7 +204,8 @@ const Manager = () => {
             }}
 
             onRowSelectionModelChange={(ids) => {
-              const selectedIDs = new Set(ids);
+              const newIds = ids.map(e => e +1);
+              const selectedIDs = new Set(newIds);
               const selectedRows = rows.filter((row) =>
                 selectedIDs.has(row.id),
               );
@@ -214,9 +217,7 @@ const Manager = () => {
 
             disableRowSelectionOnClick
           />
-          <pre style={{ fontSize: 10 }}>
-            {JSON.stringify(selectedRows, null, 4)}
-          </pre>
+         
 
         </Box>
       </div>

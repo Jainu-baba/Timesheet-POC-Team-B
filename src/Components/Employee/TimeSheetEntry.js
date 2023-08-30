@@ -29,11 +29,16 @@ const TimeSheetEntry = () => {
 
     useEffect(() => {
         setProjectCodes(projectData);
-
-        // axios
-        // .get("./mock-data/project-codes.json")
-        // .then((res) => setProjectCodes(res.data))
-        // .catch(err=>console.log(err))
+        if(window.location.href.includes("details")) {
+            const employeesData= JSON.parse(localStorage.getItem('EmployeesData'));
+            console.log(employeesData);
+            if(employeesData && employeesData.length) {
+             let timesheetData =   Object.values(Object.values(JSON.parse(employeesData[0]))[0])[0];
+             setTimeSheetRows(timesheetData);
+            }
+        }
+       
+     
     }, []);
 
 
