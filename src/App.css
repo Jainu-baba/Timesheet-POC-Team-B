@@ -178,3 +178,18 @@
  .entry{
     width:60px;
  }
+ .employee-select {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    margin-bottom: 30px;
+  }
+  .total-hrs-date{
+    margin-top:30px;
+  }
+  .employee-name{
+    width: 300px;
+  }
+  .dates{
+    width: 210px;
+  }

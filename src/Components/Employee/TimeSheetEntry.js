@@ -1,270 +1,126 @@
-import React, { useMemo, useEffect, useState } from 'react';
-import { MaterialReactTable } from 'material-react-table';
-import PropTypes from 'prop-types';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import React, { useEffect } from 'react'
+import { useState } from 'react';
 
-
-import { useNavigate } from "react-router-dom";
-import { Grid } from '@mui/material';
 import DateRange from './DateRange.json';
-import Stack from '@mui/material/Stack';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
-
-
-
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import { FaRegTrashAlt } from "react-icons/fa";
-
 import projectData from "../../mock-data/project-codes.json";
 import jobData from "../../mock-data/job-codes.json";
 
+const TimeSheetEntry = () => {
 
 
-
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
-function Item(props) {
-  const { sx, ...other } = props;
-  return (
-    <Box
-      sx={{
-        bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#101010' : '#fff'),
-        color: (theme) => (theme.palette.mode === 'dark' ? 'grey.300' : 'grey.800'),
-        border: '1px solid',
-        borderColor: (theme) =>
-          theme.palette.mode === 'dark' ? 'grey.800' : 'grey.300',
-        p: 1,
-        m: 1,
-        borderRadius: 2,
-        fontSize: '0.875rem',
-        fontWeight: '700',
-        ...sx,
-      }}
-      {...other}
-    />
-  );
-}
-
-Item.propTypes = {
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(
-      PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
-    ),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-};
-
-export default function TimeSheetEntry() {
-    
-
-  const role = localStorage.getItem("role") ?? 'employee';
-  const [projectCodes, setProjectCodes] = useState([]);
-  const [comments, setComments] = useState('');
-  const [jobCodes, setJobCodes] = useState([]);
-  const [day1Total, setDay1Total] = useState(0);
-  const [day2Total, setDay2Total] = useState(0);
-  const [day3Total, setDay3Total] = useState(0);
-  const [day4Total, setDay4Total] = useState(0);
-  const [day5Total, setDay5Total] = useState(0);
-  const [day6Total, setDay6Total] = useState(0);
-  const [day7Total, setDay7Total] = useState(0);
-
-
-  useEffect(() => {
-    setProjectCodes(projectData);
-    if (window.location.href.includes("details")) {
-      const employeesData = JSON.parse(localStorage.getItem('EmployeesData'));
-      console.log(employeesData);
-      if (employeesData && employeesData.length) {
-        let timesheetData = Object.values(Object.values(JSON.parse(employeesData[0]))[0])[0];
-        setTimeSheetRows(timesheetData);
-        setDay1Total(timesheetData.reduce((total, row) => total + parseInt(row['day1']), 0));
-        setDay2Total(timesheetData.reduce((total, row) => total + parseInt(row['day2']), 0));
-        setDay3Total(timesheetData.reduce((total, row) => total + parseInt(row['day3']), 0));
-        setDay4Total(timesheetData.reduce((total, row) => total + parseInt(row['day4']), 0));
-        setDay5Total(timesheetData.reduce((total, row) => total + parseInt(row['day5']), 0));
-        setDay6Total(timesheetData.reduce((total, row) => total + parseInt(row['day6']), 0));
-        setDay7Total(timesheetData.reduce((total, row) => total + parseInt(row['day7']), 0));
-      }
-
-    }
-
-
-  }, []);
-
-
-  const getJobCodes = (projectCode) => {
-    console.log(jobData);
-    const jobs = jobData.filter((job) => job.projectCode === projectCode);
-    setJobCodes(jobs);
-  }
-
-
-  const [timeSheetRows, setTimeSheetRows] = useState([{ projectCode: '', jobCode: '', day1: 0, day2: 0, day3: 0, day4: 0, day5: 0, day6: 0, day7: 0, total: 0 }]);
-
-  const addRow = () => {
-    const rows = timeSheetRows;
-    rows.push({ projectCode: '', jobCode: '', day1: 0, day2: 0, day3: 0, day4: 0, day5: 0, day6: 0, day7: 0, total: 0 });
-    setTimeSheetRows([...rows]);
-    console.log(rows);
-  }
-
-  const removeRows = (index) => {
-
-    const rows = [...timeSheetRows];
-    rows.splice(index, 1);
-
-
-    setDay1Total(rows.reduce((total, row) => total + parseInt(row['day1']), 0));
-    setDay2Total(rows.reduce((total, row) => total + parseInt(row['day2']), 0));
-    setDay3Total(rows.reduce((total, row) => total + parseInt(row['day3']), 0));
-    setDay4Total(rows.reduce((total, row) => total + parseInt(row['day4']), 0));
-    setDay5Total(rows.reduce((total, row) => total + parseInt(row['day5']), 0));
-    setDay6Total(rows.reduce((total, row) => total + parseInt(row['day6']), 0));
-    setDay7Total(rows.reduce((total, row) => total + parseInt(row['day7']), 0));
-
-
-    setTimeSheetRows([...rows]);
-    console.log(rows);
-
-  }
-
-  const changeTimeSheetData = (key, index, value) => {
-    const rows = [...timeSheetRows];
-    const oldValue = parseInt(rows[index][key]);
-    rows[index][key] = value;
-
-    if (key == 'projectCode') {
-      getJobCodes(value);
-    } else if (key !== 'projectCode' && key !== 'jobCode' && key !== 'total') {
-      rows[index]['total'] = Math.min(parseInt(rows[index]['day1']), 16) + Math.min(parseInt(rows[index]['day2']), 16) + Math.min(parseInt(rows[index]['day3']), 16) + Math.min(parseInt(rows[index]['day4']), 16) + Math.min(parseInt(rows[index]['day5']), 16) + Math.min(parseInt(rows[index]['day6']), 16) + Math.min(parseInt(rows[index]['day7']), 16);
-    }
-
-    setDay1Total(rows.reduce((total, row) => total + parseInt(row['day1']), 0));
-    setDay2Total(rows.reduce((total, row) => total + parseInt(row['day2']), 0));
-    setDay3Total(rows.reduce((total, row) => total + parseInt(row['day3']), 0));
-    setDay4Total(rows.reduce((total, row) => total + parseInt(row['day4']), 0));
-    setDay5Total(rows.reduce((total, row) => total + parseInt(row['day5']), 0));
-    setDay6Total(rows.reduce((total, row) => total + parseInt(row['day6']), 0));
-    setDay7Total(rows.reduce((total, row) => total + parseInt(row['day7']), 0));
-
-
-    setTimeSheetRows([...rows]);
-    console.log(rows);
-
-    const empName = localStorage.getItem('employeeName');
-    console.log(empName);
-    const dateRange = localStorage.getItem('dateRange');
-    const dateIndex = localStorage.getItem('selectedDateRangeIndex');
-    if (empName && dateRange) {
-      const empData = { [empName]: { [dateRange]: rows, dateIndex: dateIndex } };
-
-      localStorage.setItem("empData", JSON.stringify(empData))
-
-    }
-  }
-
-  const naviagate = useNavigate();
-    const [employeeName, setEmployeeName] = useState('');
-    const [selectedRange, setSelectedRange] = useState(null);
     const [dateRanges, setDateRanges] = useState(DateRange);
     const [selectedDates, setSelectedDates] = useState(['', '', '', '', '', '', '']);
-
-    const [open, setOpen] = React.useState(false);   
+    const [selectedRange, setSelectedRange] = useState(null);
     const [selectedDate, setselectedDate] = React.useState(null);
-    var vertical = "top";
-    var horizontal = "center";
-    const [toastOpen, settoastOpen] = React.useState(false);
-    const [rejectoast, setrejectoast] = React.useState(false);
-
-    const BacktoManagerApprove = () => {
-        localStorage.setItem("approved", true);
-        settoastOpen(true);
-        setTimeout(() => naviagate("/manager"), 1000);
-       
 
 
-    }
-    const BacktoManagerRejected = () => {
-        setrejectoast(true);
-        setTimeout(() => naviagate("/manager"), 1000);
-        localStorage.setItem("approved", true);
+
+    const [suggestions, setSuggestions] = useState([]);
+    const [text, setText] = useState('');
+    const [jobtext, setjobText] = useState('');
+
+    // const [items, setItems] = useState([]);
 
 
-    }
+    const [timeSheetRows, setTimeSheetRows] = useState([
+        { projectCode: '', jobCode: '', day1: 0, day2: 0, day3: 0, day4: 0, day5: 0, day6: 0, day7: 0, total: 0 },
+        { projectCode: '', jobCode: '', day1: 0, day2: 0, day3: 0, day4: 0, day5: 0, day6: 0, day7: 0, total: 0 },
+        { projectCode: '', jobCode: '', day1: 0, day2: 0, day3: 0, day4: 0, day5: 0, day6: 0, day7: 0, total: 0 },
+        { projectCode: '', jobCode: '', day1: 0, day2: 0, day3: 0, day4: 0, day5: 0, day6: 0, day7: 0, total: 0 }]);
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
+    // dayswise column sum
+    const [day1Total, setDay1Total] = useState(0);
+    const [day2Total, setDay2Total] = useState(0);
+    const [day3Total, setDay3Total] = useState(0);
+    const [day4Total, setDay4Total] = useState(0);
+    const [day5Total, setDay5Total] = useState(0);
+    const [day6Total, setDay6Total] = useState(0);
+    const [day7Total, setDay7Total] = useState(0);
+    // dayswise column sum end
 
-    const handleClose = () => {
-        setOpen(false);
-    };
 
+    const [projectCodes, setProjectCodes] = useState([]);
+
+    const [jobCodes, setJobCodes] = useState([]);
 
     useEffect(() => {
         setDateRanges(DateRange);
-        localStorage.setItem("approved", false);
-        if(!window.location.href.includes("details")) {
-            localStorage.setItem('EmployeesData', JSON.stringify([]));
-        }
-        
-        // if (dateRanges && dateRanges.length > 0) {
-        //     setSelectedRange(dateRanges[0]);
-        //     setSelectedDates(dateRanges[0]?.dates)
-        // };
-        if (window.location.href.includes("details")) {        
-         const employeesData= JSON.parse(localStorage.getItem('EmployeesData'));
-         const pathname = window.location.pathname;
-         const name = pathname.split("/")[2];
-         setEmployeeName(name);
-         console.log(employeesData);    
-       let date = employeesData.length && Object.values(JSON.parse(employeesData[0]))[0].dateIndex;
-       setselectedDate(date);
-       setSelectedRange(dateRanges[date]);
-       setSelectedDates(dateRanges[date]?.dates)
-        };
-      
-      
+        setSelectedDates(DateRange[0].dates)
+        console.log(DateRange[0].dates);
+        setProjectCodes(projectData);
+        setJobCodes(jobData);
     }, []);
 
-    const handleEmployee = (empName) => {
-        setEmployeeName(empName);
-        localStorage.setItem('employeeName', empName);
-        localStorage.setItem(empName, '');
-    }
+    useEffect(() => {
+        console.log('timesheet updated:', timeSheetRows);
+    }, [timeSheetRows]);
 
-    const handleToastClose = (event, reason) => {
-        if (reason === 'clickaway') {
-          return;
+    useEffect(() => {
+        console.log('jobcodes:', jobCodes);
+    }, [jobCodes]);
+    // const onTextChanged = (e,type) => {
+    //     console.log('type',type);
+    //     let suggestions = [];
+    //     const value = e.target.value;
+    //     if (type === 'project') {
+    //         if (value.length > 0) {
+    //             const regex = new RegExp(`^${value}`, 'i');
+    //             suggestions = projectCodes.map(ele =>ele.code).sort().filter(v => regex.test(v));
+    //         }
+    //         setText(value)
+    //     }
+    //     if (type === 'job') {
+    //         if (value.length > 0) {
+    //             const regex = new RegExp(`^${value}`, 'i');
+    //             suggestions = jobCodes.map(ele =>ele.jobCode).sort().filter(v => regex.test(v));
+    //         }
+    //         setjobText(value)
+    //     }
+    //     setSuggestions(suggestions);
+
+    // }
+    function renderSuggestions(type, index) {
+        // const {suggestions} = ;
+        if (type === 'project') {
+            if (suggestions.length === 0) {
+                return null;
+            }
+            return (
+                <div className="srchList">
+                    <ul>
+                        {suggestions.map((item) => <li onClick={() => suggestionSelected(item, 'project')}>{item}</li>)}
+                    </ul>
+                </div>
+            );
         }
-    
-        settoastOpen(false);
-        setrejectoast(false);
-      };
+        if (type === 'job') {
+            if (suggestions.length === 0) {
+                return null;
+            }
+            return (
+                <div className="srchList">
+                    <ul>
+                        {suggestions.map((item) => <li onClick={() => suggestionSelected(item, 'job')}>{item}</li>)}
+                    </ul>
+                </div>
+            );
+        }
 
-    const submitData = () => {
-
-        const empData = localStorage.getItem("empData");
-        console.log(JSON.parse(empData));
-        let oldData = localStorage.getItem('EmployeesData') ? JSON.parse(localStorage.getItem('EmployeesData')) : [];
-        oldData.push(empData);
-        localStorage.setItem('EmployeesData', JSON.stringify(oldData));
-        handleClickOpen();
-        setTimeout(() => {
-            handleClose();
-        }, 2000);
     }
-
+    function suggestionSelected(value, type) {
+        console.log(value, type);
+        setSuggestions([]);
+        if (type === 'project') {
+            // setText(value);
+            // setProjectCodes(projectCodes.filter(ele => ele.code === value));
+            // const rows = [...timeSheetRows];
+            // rows[index][key] = value;
+        }
+        if (type === 'job') {
+            setjobText(value);
+            setJobCodes(jobCodes.filter(ele => ele.jobCode === value));
+        }
+    }
 
     const handleDropdownChange = (event) => {
         const selectedIndex = event.target.value;
@@ -275,483 +131,235 @@ export default function TimeSheetEntry() {
         const empName = localStorage.getItem('employeeName');
         let empData = localStorage.getItem(empName);
         localStorage.setItem('selectedDateRangeIndex', selectedIndex);
-        empData = { [edata]: []};
+        empData = { [edata]: [] };
         localStorage.setItem(empName, JSON.stringify(empData));
 
     };
 
 
+    const addTableRow = () => {
+        const rows = timeSheetRows;
+        rows.push({ projectCode: '', jobCode: '', day1: 0, day2: 0, day3: 0, day4: 0, day5: 0, day6: 0, day7: 0, total: 0 });
+        setTimeSheetRows([...rows]);
+        console.log(rows);
+    }
+    const deleteTableRow = (index) => {
+        console.log('index:', index);
 
-  // const Person = {
-  //   firstName: string;
-  //   lastName: string;
-  //   address: string;
-  //   city: string;
-  //   state: string;
-  // };
-
-  const headerColumns = useMemo(
-    //column definitions...
-    () => [
-      {
-        accessorKey: 'employeeName',
-        header: '',
-      },
-      {
-        accessorKey: 'dateRange',
-        header: '',
-      },
-      {
-        accessorKey: 'day1',
-        header: 'Day1',
-        size:3,
-      },
-      {
-        accessorKey: 'day2',
-        header: 'Day2',
-        size: 3,
-      },
-      {
-        accessorKey: 'day3',
-        header: 'Day3',
-        size: 5,
-      },
-      {
-        accessorKey: 'day4',
-        header: 'Day4',
-        size: 5,
-      },
-      {
-        accessorKey: 'day5',
-        header: 'Day5',
-        size: 5,
-      },
-      {
-        accessorKey: 'day6',
-        header: 'Day6',
-        size: 5,
-      },
-      {
-        accessorKey: 'day7',
-        header: 'Day7',
-        size: 5,
-      },
-      {
-        accessorKey: 'delete',
-        header: 'delete',
-        size: 5,
-      },
-      {
-        accessorKey: 'submit',
-        header: 'Submit',
-        size: 5,
-      },
-    ],
-    [],
-    //end
-  );
-
-  const headerData = [{
-    employeeName: <select className='entry-selectbox' value={employeeName} onChange={(event) => handleEmployee(event.target.value)} aria-label="Select Employee">
-    <option>Employee Name</option>
-    <option>Bhargavi</option>
-    <option>Karthik</option>
-    <option>Ejaz</option>
-    <option>Rakesh</option>
-    <option>Jainu</option>
-</select>,
-    dateRange: <select className='entry-selectbox' value={selectedDate} onChange={handleDropdownChange} aria-label="Select Date Range">
-    {/* <option value={null}>Select a date range</option> */}
-    {dateRanges.map((range, index) => (
-        <option key={index} value={index}>
-            {range.fromDate} - {range.toDate}
-        </option>
-    ))}
-</select>,
-    submit: <>{role !== 'manager' ? <button onClick={submitData} disabled={!(employeeName && selectedRange) ? 'true' : ''} className='timesheet-button' aria-label="Submit Data">submit</button>
-    : <Stack direction="row" spacing={2}>
-        <Button variant="contained" color="success" onClick={(e) => BacktoManagerApprove()}>Approve</Button>
-        <Button variant="contained" color="error" onClick={(e) => BacktoManagerRejected()} >Reject</Button>
-    </Stack>}</>,
-  }];
-
-  const data = [];
-
-  {timeSheetRows && timeSheetRows.length > 0 && timeSheetRows.map((row, index) => {
-
-    data.push({
-      projectCode: <>{role === 'manager' ?  <input typ="text" disabled value={row['projectCode']}  style={{height: "35px"}} role="textbox"/>
-      : <Autocomplete
-        disableClearable
-        className='autocomplete'
-        options={projectCodes.map((option) => option.code)}
-        onChange={(event, value) => changeTimeSheetData('projectCode', index, value)}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            className='entry-input entry-auto-suggest'
-            value={row['projectCode']}
-            label="Project Code"
-            InputProps={{
-              ...params.InputProps,
-              type: 'search',
-            }}
-            aria-label={`Project Code for row ${index}`}
-            tabIndex={0}
-          />
-        )}
-      />}</>,
-      jobCode: <>{role === 'manager' ?  <input typ="text" value={row['jobCode']}  disabled style={{height: "35px"}} role="textbox"/>
-      : <Autocomplete
-        disableClearable
-        options={jobCodes.map((option) => option.jobCode)}
-        onChange={(event, value) => changeTimeSheetData('jobCode', index, value)}
-        className='autocomplete'
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            value={row['jobCode']}
-            label="Job Code"
-            InputProps={{
-              ...params.InputProps,
-              type: 'search',
-            }}
-            aria-label={`Job Code for row ${index}`}
-            tabIndex={0}
-          />
-
-        )}
-
-      />}</>,
-      day1: <input typ="text" value={Math.min(row['day1'], 16)} onChange={(event) => changeTimeSheetData('day1', index, Math.min(event.target.value, 16))} className='entry-input w-50' aria-label={`Day 1 for row ${index}`} role="textbox"/>,
-      day2: <input typ="text" value={Math.min(row['day2'], 16)} onChange={(event) => changeTimeSheetData('day2', index, Math.min(event.target.value, 16))} className='entry-input w-50' aria-label={`Day 2 for row ${index}`} role="textbox"/>,
-      day3: <input typ="text" value={Math.min(row['day3'], 16)} onChange={(event) => changeTimeSheetData('day3', index, Math.min(event.target.value, 16))} className='entry-input w-50' aria-label={`Day 3 for row ${index}`} role="textbox"/>,
-      day4: <input typ="text" value={Math.min(row['day4'], 16)} onChange={(event) => changeTimeSheetData('day4', index, Math.min(event.target.value, 16))} className='entry-input w-50' aria-label={`Day 4 for row ${index}`} role="textbox"/>,
-      day5: <input typ="text" value={Math.min(row['day5'], 16)} onChange={(event) => changeTimeSheetData('day5', index, Math.min(event.target.value, 16))} className='entry-input w-50' aria-label={`Day 5 for row ${index}`} role="textbox"/>,
-      day6: <input typ="text" value={Math.min(row['day6'], 16)} onChange={(event) => changeTimeSheetData('day6', index, Math.min(event.target.value, 16))} className='entry-input w-50' aria-label={`Day 6 for row ${index}`} role="textbox"/>,
-      day7: <input typ="text" value={Math.min(row['day7'], 16)} onChange={(event) => changeTimeSheetData('day7', index, Math.min(event.target.value, 16))} className='entry-input w-50' aria-label={`Day 7 for row ${index}`} role="textbox"/>,
-      delete: <>{role !== 'manager' && <FaRegTrashAlt onClick={() => removeRows(index)} className='w-30' role="button" tabIndex={0} aria-label={`Remove row ${index}`}/>}</>,
-      total: <input disabled value={row['total']} onChange={(event) => changeTimeSheetData('total', index, event.target.value)} placeholder='Total' typ="text" className='entry-input w-50' aria-label={`Total for row ${index}`}/>
-    });
-  })}
-
-  const totalData = [];
+        const rows = [...timeSheetRows];
+        rows.splice(index, 1);
 
 
-    totalData.push({
-      projectCode: '',
-      jobCode: '',
-      day1: <input type='text' value={day1Total}  className='entry-input w-50' aria-label="Day 1 Total" role="cell"/>,
-      day2: <input type='text' value={day2Total}  className='entry-input w-50' aria-label="Day 2 Total" role="cell"/>,
-      day3: <input type='text' value={day3Total}  className='entry-input w-50' aria-label="Day 3 Total" role="cell"/>,
-      day4: <input type='text' value={day4Total}  className='entry-input w-50' aria-label="Day 4 Total" role="cell"/>,
-      day5: <input type='text' value={day5Total}  className='entry-input w-50' aria-label="Day 5 Total" role="cell"/>,
-      day6: <input type='text' value={day6Total}  className='entry-input w-50' aria-label="Day 6 Total" role="cell"/>,
-      day7: <input type='text' value={day7Total}  className='entry-input w-50' aria-label="Day 7 Total" role="cell"/>,
-      delete: '',
-      total: <input disabled typ="text" value={day1Total + day2Total + day3Total + day4Total + day5Total + day6Total + day7Total} className='entry-input w-50'  aria-label="Total Sum" />
-    });
-
-  // if(window.location.href.split("/").includes("employee")) {
-  //   localStorage.setItem("role", 'employee');
-  // }
+        setDay1Total(rows.reduce((total, row) => total + parseInt(row['day1']), 0));
+        setDay2Total(rows.reduce((total, row) => total + parseInt(row['day2']), 0));
+        setDay3Total(rows.reduce((total, row) => total + parseInt(row['day3']), 0));
+        setDay4Total(rows.reduce((total, row) => total + parseInt(row['day4']), 0));
+        setDay5Total(rows.reduce((total, row) => total + parseInt(row['day5']), 0));
+        setDay6Total(rows.reduce((total, row) => total + parseInt(row['day6']), 0));
+        setDay7Total(rows.reduce((total, row) => total + parseInt(row['day7']), 0));
 
 
-  // return (
-  //   <div className='time-sheet-box'>
-  //     <TimeSheet />
-  //     <TimeSheetEntry />
 
-  //   </div>
-  // );
+        setTimeSheetRows([...rows]);
+    };
 
-  const columns = useMemo(
-    //column definitions...
-    () => [
-      {
-        accessorKey: 'projectCode',
-        header: 'Project Code',
-        size: 130,
+    // function appendLi()
+    // {
+    //   var ul = document.getElementById("lang");
+    //   var li = document.createElement("li");
+    //   var text = document.createTextNode("PHP");    
+    //   li.appendChild(text);
+    //   ul.appendChild(li);
+    // }
+    const suggestionSelectedVal = (key, index, value, type) => {
+        const rows = [...timeSheetRows];
+        rows[index][key] = value;
+        setTimeSheetRows([...rows]);
+    }
+    const changeTimeSheetData = async (key, index, value) => {
+        console.log('key:', key, 'index:', index, 'value:', value);
+        const rows = [...timeSheetRows];
+        rows[index][key] = value;
+        console.log('das:', document.getElementById(`auto_suggestion_${index}`));
 
-      },
-      {
-        accessorKey: 'jobCode',
-        header: 'Job cod',
-        size: 130
-      },
-      {
-        accessorKey: 'day1',
-        header: 'Day1',
-        size:3,
-      },
-      {
-        accessorKey: 'day2',
-        header: 'Day2',
-        size: 3,
-      },
-      {
-        accessorKey: 'day3',
-        header: 'Day3',
-        size: 5,
-      },
-      {
-        accessorKey: 'day4',
-        header: 'Day4',
-        size: 5,
-      },
-      {
-        accessorKey: 'day5',
-        header: 'Day5',
-        size: 5,
-      },
-      {
-        accessorKey: 'day6',
-        header: 'Day6',
-        size: 5,
-      },
-      {
-        accessorKey: 'day7',
-        header: 'Day7',
-        size: 5,
-      },
-      {
-        accessorKey: 'delete',
-        header: '',
-        size: 2,
-      },
-      {
-        accessorKey: 'total',
-        header: 'Total',
-        size: 5,
-      },
-    ],
-    [],
-    //end
-  );
 
-  const totalColumns = useMemo(
-    //column definitions...
-    () => [
-      {
-        accessorKey: 'projectCode',
-        header: 'Project Code',
-        size: 150,
+        if (key === 'projects') {
+            let suggestions = [];
+            if (value.length > 0) {
+                const regex = new RegExp(`^${value}`, 'i');
+                suggestions = projectCodes.map(ele => ele.code).sort().filter(v => regex.test(v));
+                setSuggestions(suggestions);
+            }
 
-      },
-      {
-        accessorKey: 'jobCode',
-        header: 'Job cod',
-        size: 150
-      },
-      {
-        accessorKey: 'day1',
-        header: 'Day1',
-        size:5,
-      },
-      {
-        accessorKey: 'day2',
-        header: 'Day2',
-        size: 5,
-      },
-      {
-        accessorKey: 'day3',
-        header: 'Day3',
-        size: 5,
-      },
-      {
-        accessorKey: 'day4',
-        header: 'Day4',
-        size: 5,
-      },
-      {
-        accessorKey: 'day5',
-        header: 'Day5',
-        size: 5,
-      },
-      {
-        accessorKey: 'day6',
-        header: 'Day6',
-        size: 5,
-      },
-      {
-        accessorKey: 'day7',
-        header: 'Day7',
-        size: 5,
-      },
-      {
-        accessorKey: 'delete',
-        header: '',
-        size: 2,
-      },
-      {
-        accessorKey: 'total',
-        header: 'Total',
-        size: 5,
-      },
-    ],
-    [],
-    //end
-  );
+            const root = document.getElementById(`auto_suggestion_${index}_srchList`);
+            for await (const suggestion of suggestions) {
+                const optionElement = `<option onClick={(e) => {${suggestionSelectedVal(key, index, suggestion, 'project')}}>${suggestion}</option>`;
+                root.innerHTML += optionElement;
+            }
+        }
+        if (key === 'projectCode') {
+            getJobCodes(value);
+        } else if (key !== 'projectCode' && key !== 'jobCode' && key !== 'total') {
+            const oldValue = parseInt(rows[index][key]);
+            console.log('oldValue', oldValue);
 
-  const footerData = [{
-    addRow: <>{role !== 'manager' && <button type="button" onClick={() => addRow()} className='timesheet-button' aria-label="Add Row Button" style={{ width: '180px', textAlign: 'center' }}>Add Row</button>}</>
-  }];
+            console.log('total:', Math.min(parseInt(rows[index]['day1']), 16) + Math.min(parseInt(rows[index]['day2']), 16) + Math.min(parseInt(rows[index]['day3']), 16) + Math.min(parseInt(rows[index]['day4']), 16) + Math.min(parseInt(rows[index]['day5']), 16) + Math.min(parseInt(rows[index]['day6']), 16) + Math.min(parseInt(rows[index]['day7']), 16))
+            rows[index]['total'] = Math.min(parseInt(rows[index]['day1']), 16) + Math.min(parseInt(rows[index]['day2']), 16) + Math.min(parseInt(rows[index]['day3']), 16) + Math.min(parseInt(rows[index]['day4']), 16) + Math.min(parseInt(rows[index]['day5']), 16) + Math.min(parseInt(rows[index]['day6']), 16) + Math.min(parseInt(rows[index]['day7']), 16);
+        }
 
-  const footerColumns = useMemo(
-    //column definitions...
-    () => [
-      {
-        accessorKey: 'addRow',
-        header: 'Add Row',
-        size: 50,
+        setDay1Total(rows.reduce((total, row) => total + parseInt(row['day1']), 0));
+        setDay2Total(rows.reduce((total, row) => total + parseInt(row['day2']), 0));
+        setDay3Total(rows.reduce((total, row) => total + parseInt(row['day3']), 0));
+        setDay4Total(rows.reduce((total, row) => total + parseInt(row['day4']), 0));
+        setDay5Total(rows.reduce((total, row) => total + parseInt(row['day5']), 0));
+        setDay6Total(rows.reduce((total, row) => total + parseInt(row['day6']), 0));
+        setDay7Total(rows.reduce((total, row) => total + parseInt(row['day7']), 0));
 
-      },
-    ],
-    [],
-    //end
-  );
+        setTimeSheetRows([...rows]);
+        console.log(rows);
+    }
 
-  return (
-    <>
-      <div className='time-sheet-box'>
-        {/* <TimeSheet />
-        <TimeSheetEntry /> */}
+    const getJobCodes = (projectCode) => {
+        console.log(jobData);
+        const jobs = jobData.filter((job) => job.projectCode === projectCode);
+        setJobCodes(jobs);
+        // getAutoSuggestions('job',projectCode)
+    }
 
-        <MaterialReactTable
-          columns={headerColumns}
-          data={headerData}
-          enableTableHead={false}
-          enableColumnActions={false}
-          enableColumnFilters={false}
-          enablePagination={false}
-          enableSorting={false}
-          enableBottomToolbar={false}
-          enableTopToolbar={false}
-          muiTableBodyRowProps={{ hover: false }}
-          muiTableProps={{
-            sx: {
-              border: '1px solid rgba(81, 81, 81, 1)',
-              padding:'2px',
-              width:'95%',
-              margin: 'auto'
-            },
-          }}
-          muiTableHeadCellProps={{
-            sx: {
-              border: '1px solid rgba(81, 81, 81, 1)',
-              width:'50%'
-            },
-          }}
-          muiTableBodyCellProps={{
-            sx: {
-              border: '1px solid rgba(81, 81, 81, 1)',
-              padding:'2px'
-            },
-          }}
-        />
+    // const getAutoSuggestions=(type,index,value)=>{
 
-        {data && data.length > 0 && <MaterialReactTable
-          columns={columns}
-          data={data}
-          enableColumnActions={false}
-          enableColumnFilters={false}
-          enablePagination={false}
-          enableSorting={false}
-          enableBottomToolbar={false}
-          enableTopToolbar={false}
-          muiTableBodyRowProps={{ hover: false }}
-          muiTableProps={{
-            sx: {
-              border: '1px solid rgba(81, 81, 81, 1)',
-              padding:'2px',
-              width:'95%',
-              margin: 'auto'
-            },
-          }}
-          muiTableHeadCellProps={{
-            sx: {
-              border: '1px solid rgba(81, 81, 81, 1)',
-              width:'50%'
-            },
-          }}
-          muiTableBodyCellProps={{
-            sx: {
-              border: '1px solid rgba(81, 81, 81, 1)',
-              padding:'2px'
-            },
-          }}
-        />}
+    //     console.log('getAutoSuggestions:',type,value);
+    //     let suggestions = [];
+    // if (type === 'project') {
+    //     if (value.length > 0) {
+    //         const regex = new RegExp(`^${value}`, 'i');
+    //         suggestions = projectCodes.map(ele =>ele.code).sort().filter(v => regex.test(v));
+    //     }
+    //     setText(value)
+    // }
+    //     if (type === 'job') {
+    //         if (value.length > 0) {
+    //             const regex = new RegExp(`^${value}`, 'i');
+    //             suggestions = jobCodes.map(ele => ele.projectCode===value && ele.jobCode).sort().filter(v => regex.test(v));
+    //         }
+    //         setjobText(value)
+    //     }
+    //     return suggestions;
+    //     // setSuggestions(suggestions);
+    // }
 
-        {role !== 'manager' && <MaterialReactTable
-          columns={footerColumns}
-          data={footerData}
-          enableTableHead={false}
-          enableColumnActions={false}
-          enableColumnFilters={false}
-          enablePagination={false}
-          enableSorting={false}
-          enableBottomToolbar={false}
-          enableTopToolbar={false}
-          muiTableBodyRowProps={{ hover: false }}
-          muiTableProps={{
-            sx: {
-              border: '1px solid rgba(81, 81, 81, 1)',
-              padding:'2px',
-              width:'95%',
-              margin: 'auto'
-            },
-          }}
-          muiTableHeadCellProps={{
-            sx: {
-              border: '1px solid rgba(81, 81, 81, 1)',
-              width:'50%'
-            },
-          }}
-          muiTableBodyCellProps={{
-            sx: {
-              border: '1px solid rgba(81, 81, 81, 1)',
-              padding:'2px'
-            },
-          }}
-        />}
+    return (
+        <>
+            <div class="container mt-4">
+                <div class="employee-select">
+                    <select class="form-control employee-name">
+                        <option>Employee Name</option>
+                    </select>
+                    <div className='col-md-3'>
+                        <select className='entry-selectbox' value={selectedDate} onChange={handleDropdownChange}>
+                            {dateRanges.map((range, index) => (
+                                <option key={index} value={index}>
+                                    {range.fromDate} - {range.toDate}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <button class="btn btn-primary">Submit</button>
+                </div>
 
-        <MaterialReactTable
-        enableTableHead={false}
-          columns={totalColumns}
-          data={totalData}
-          enableColumnActions={false}
-          enableColumnFilters={false}
-          enablePagination={false}
-          enableSorting={false}
-          enableBottomToolbar={false}
-          enableTopToolbar={false}
-          muiTableBodyRowProps={{ hover: false }}
-          muiTableProps={{
-            sx: {
-              border: '1px solid rgba(81, 81, 81, 1)',
-              padding:'2px',
-              width:'95%',
-              margin: 'auto'
-            },
-          }}
-          muiTableHeadCellProps={{
-            sx: {
-              border: '1px solid rgba(81, 81, 81, 1)',
-              width:'50%'
-            },
-          }}
-          muiTableBodyCellProps={{
-            sx: {
-              border: '1px solid rgba(81, 81, 81, 1)',
-              padding:'2px'
-            },
-          }}
-        />
-      </div>
+                <table class="table table-bordered text-center">
+                    <thead className='thead-dark'>
+                        <tr className='bg-primary'>
+                            <th className='col-md-2'>ProjectCode</th>
+                            <th className='col-md-2'>JobCode</th>
+                            {selectedDates && selectedDates.length > 0 && selectedDates.map((date) => {
+                                return <th>{date ?? ''}</th>
+                            })}
+                            <th className='col-md-1'></th>
+                            <th className='col-md-2' Style={'width:12px;'}>Total </th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        {timeSheetRows && timeSheetRows.length > 0 && timeSheetRows.map((row, index) => {
+                            return (
+                                <tr>
+                                    <td className='col-md-2'>
+                                        <div className="container">
+                                            <div className="row justify-content-md-center">
+                                                <div className="col-md-12 input">
+                                                    <input value={row.projectCode} onChange={(e) => { changeTimeSheetData('projects', index, e.target.value) }} type="text" placeHolder="Search" class="form-control" />
+                                                </div>
+                                                <div className="col-md-12 justify-content-md-center" id={`auto_suggestion_${index}`}>
+                                                    {/* {renderSuggestions('project',index)} */}
+                                                    <div className="srchList" id={`auto_suggestion_${index}_srchList`}>
+                                                        <ul>
+                                                            {/* {suggestions?.map(project_code => (
+                                                <li onClick={(e)=>{
+                                                   return row.projectCode=e.target.value
+                                                }  }
+                                                className={`listItem- ${project_code}`}>{project_code}</li>) )
+                                                }                  */}
+                                                        </ul>
+                                                    </div>
 
-    </>
-  );
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className='col-md-2'>
+                                        <div className="container">
+                                            <div className="row justify-content-md-center">
+                                                <div className="col-md-12 input">
+                                                    <input value={row.jobCode} onChange={(e) => { changeTimeSheetData('projectCode', index, e.target.value) }} type="text" placeHolder="Search" class="form-control" />
+                                                </div>
+                                                <div className="col-md-12 justify-content-md-center">
+                                                    {/* {renderSuggestions('job')} */}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className='col-md-1'><input type="text" class="form-control" value={row.day1} onChange={(event) => changeTimeSheetData('day1', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-1'><input type="text" class="form-control" value={row.day2} onChange={(event) => changeTimeSheetData('day2', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-1'><input type="text" class="form-control" value={row.day3} onChange={(event) => changeTimeSheetData('day3', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-1'><input type="text" class="form-control" value={row.day4} onChange={(event) => changeTimeSheetData('day4', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-1'><input type="text" class="form-control" value={row.day5} onChange={(event) => changeTimeSheetData('day5', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-1'><input type="text" class="form-control" value={row.day6} onChange={(event) => changeTimeSheetData('day6', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-1'><input type="text" class="form-control" value={row.day7} onChange={(event) => changeTimeSheetData('day7', index, Math.min(event.target.value, 16))} /></td>
+
+                                    <td>
+                                        <button class="btn" onClick={() => { deleteTableRow(index) }}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                                            </svg></button></td>
+                                    <td className='col-md-1'><input type="text" class="form-control" value={row.total} /></td>
+
+                                </tr>
+                            )
+                        })}
+                        <tr>
+                            <td className='col-md-2'></td>
+                            <td className='col-md-2'></td>
+                            <td className='col-md-1'><p>{day1Total}</p></td>
+                            <td className='col-md-1'><p>{day2Total}</p></td>
+                            <td className='col-md-1'><p>{day3Total}</p></td>
+                            <td className='col-md-1'><p>{day4Total}</p></td>
+                            <td className='col-md-1'><p>{day5Total}</p></td>
+                            <td className='col-md-1'><p>{day6Total}</p></td>
+                            <td className='col-md-1'>{day7Total}</td>
+                            <td className='col-md-1'></td>
+                            <td className='col-md-1'><p>{day1Total + day2Total + day3Total + day4Total + day5Total + day6Total + day7Total}</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="btn btn-primary" id="add-row" onClick={addTableRow}>Add Row</button>
+            </div>
+        </>
+
+    );
 }
+
+export default TimeSheetEntry;
 
 
 
