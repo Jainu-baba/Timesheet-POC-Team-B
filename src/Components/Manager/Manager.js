@@ -8,6 +8,8 @@ import Stack from '@mui/material/Stack';
 import { DataGrid } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import { useState, useEffect } from 'react';
+import Checkbox from '@mui/material/Checkbox';
+
 import DateRange from './DateRange.json';
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -91,8 +93,8 @@ const Manager = () => {
   ];
   const naviagate = useNavigate();
   const detailView = (param) => {
-    localStorage.setItem("details", param.row.id);
-    naviagate(`/details/${param.row.empName}`);
+    localStorage.setItem("details", param.id);
+    naviagate(`/details/${param.empName}`);
 
   }
   const [selectedRows, setSelectedRows] = React.useState([]);
@@ -111,41 +113,58 @@ const Manager = () => {
     setrejectoast(false);
   };
   const apply = () => {
-    var newRows = [];
-    settoastOpen(true);
-    rowsData.forEach((row, i) => {
-      selectedRows.forEach((e, id) => {
+    // var newRows = [];
+    // settoastOpen(true);
+    // rowsData.forEach((row, i) => {
+    //   selectedRows.forEach((e, id) => {
 
-        if(e.id !== row.id) {
-          newRows.push(e);
-        }
+    //     if(e.id !== row.id) {
+    //       newRows.push(e);
+    //     }
        
-      }
-       )
-    } 
+    //   }
+    //    )
+    // } 
     
-    );
-    setrowsData(newRows);
+    // );
+    // setrowsData(newRows);
    // rowsData = newRows
+       const arr1 = rowsData.map(e => e.id);  
+const arr2 = selectedRows.map(e => e.id);  
+let unique1 = arr1.filter((o) => arr2.indexOf(o) === -1);
+let unique2 = arr2.filter((o) => arr1.indexOf(o) === -1);
+
+const unique = unique1.concat(unique2);
+let finalData = rowsData.filter((o) => unique.includes(o.id));
+setrowsData(finalData);
+   // rowsData = Rows
 
   }
 
   const reject = () => {
-    var Rows = [];
-    setrejectoast(true);
-    rowsData.forEach((row, i) => {
-      selectedRows.forEach((e, id) => {
+    // var Rows = [];
+    // setrejectoast(true);
+    // rowsData.forEach((row, i) => {
+    //   selectedRows.forEach((e, id) => {
 
-        if(e.id !== row.id) {
-          Rows.push(e);
-        }
+    //     if(e.id !== row.id) {
+    //       Rows.push(e);
+    //     }
        
-      }
-       )
-    } 
+    //   }
+    //    )
+    // } 
     
-    );
-    setrowsData(Rows);
+    // );
+    // setrowsData(Rows);
+    const arr1 = rowsData.map(e => e.id);  
+const arr2 = selectedRows.map(e => e.id);  
+let unique1 = arr1.filter((o) => arr2.indexOf(o) === -1);
+let unique2 = arr2.filter((o) => arr1.indexOf(o) === -1);
+
+const unique = unique1.concat(unique2);
+let finalData = rowsData.filter((o) => unique.includes(o.id));
+setrowsData(finalData);
     //rowsData = Rows
 
   }
@@ -170,6 +189,19 @@ const Manager = () => {
           
     })  
 }, []);
+const checkItems = async(event, row, index) => {
+  console.log(event.target.checked);
+  if(event.target.checked) {
+    let rowsList = selectedRows;
+    rowsList.push(row);
+ 
+
+  setSelectedRows(rowsList);
+  setdisableButtons(((selectedRows.length > 0) ? false : true));
+
+  }
+
+}
   return (
 
     <div className="overall-layout">
@@ -203,7 +235,93 @@ const Manager = () => {
       </div>
       <div>
         <Box sx={{ height: 400, width: '100%' }}>
-          <DataGrid
+        <table class="table table-bordered text-center">
+<thead className='table-secondary'>
+    <tr className='bg-primary'>
+<th className='col-md-1'>   Select</th>
+        <th className='col-md-2'>ProjectCode</th>
+        <th className='col-md-2'>JobCode</th>
+       
+        <th className='col-md-2'>Emp name</th>
+        <th className='col-md-1'>Total</th>
+<th className='col-md-1' >ViewDetails</th>
+<th className='col-md-2' >Comments</th>
+    </tr>
+</thead>
+<tbody id="table-body">
+    {rowsData && rowsData.length > 0 ? rowsData.map((row, index) => {
+        return (
+            <tr>
+               <td className='col-md-1'>
+               <Checkbox onChange={(e) => checkItems(e,row, index)} />
+                </td>
+                <td className='col-md-2'>
+                   {row.projectCode}
+
+                </td>
+                <td className='col-md-2'>
+                    <div className="container">
+                        <div className="row justify-content-md-center">
+                            <div className="col-md-12 input">
+                            {row.jobCode}
+                            </div>
+                            <div className="col-md-12 justify-content-md-center">
+                                {/* {renderSuggestions('job')} */}
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td className='col-md-2'>
+                    <div className="container">
+                        <div className="row justify-content-md-center">
+                            <div className="col-md-12 input">
+                          {row.empName}
+                            </div>
+                            <div className="col-md-12 justify-content-md-center">
+                                {/* {renderSuggestions('job')} */}
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td className='col-md-1'>{row.total}</td>
+
+                <td className='col-md-1'>
+                <div className="container">
+                        <div className="row justify-content-md-center">
+                            <div className="col-md-12 input">
+                            <Button onClick={(e) => detailView(row)}><RemoveRedEyeIcon /></Button>
+                            </div>
+                            <div className="col-md-12 justify-content-md-center">
+                                {/* {renderSuggestions('job')} */}
+                            </div>
+                        </div>
+                    </div>
+                </td>
+               
+                <td className='col-md-2'>
+                <div className="container">
+                        <div className="row justify-content-md-center">
+                            <div className="col-md-12 input">
+                            <input type="text" style={{width: "100%"}} onChange={(e, i) => trigger(row, e)} />
+                            </div>
+                            <div className="col-md-12 justify-content-md-center">
+                                {/* {renderSuggestions('job')} */}
+                            </div>
+                        </div>
+                    </div>
+                </td>
+               
+                
+            </tr>
+        )
+    })
+  : "No Data"}
+   
+    
+</tbody>
+</table>
+
+          {/* <DataGrid
             checkboxSelection
             rows={rowsData}
             columns={columns}
@@ -229,7 +347,7 @@ const Manager = () => {
 
             disableRowSelectionOnClick
           />
-         
+          */}
 
         </Box>
       </div>

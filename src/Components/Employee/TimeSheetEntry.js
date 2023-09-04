@@ -111,21 +111,26 @@ const TimeSheetEntry = () => {
           let date = employeesData.length && Object.values(JSON.parse(employeesData[0]))[0].dateIndex;
           setselectedDate(date);
           setSelectedRange(dateRanges[date]);
-          setSelectedDates(dateRanges[date]?.dates)
+          setSelectedDates(dateRanges[date]?.dates);
+         // const employeesData= JSON.parse(localStorage.getItem('EmployeesData'));
+           
+          console.log(employeesData);
+          if(employeesData && employeesData.length) {
+              const selectedView = Number(localStorage.getItem('details'));
+           let timesheetData =   Object.values(Object.values(JSON.parse(employeesData[0]))[0])[0];
+          let updateTable =  timesheetData[selectedView]
+           setTimeSheetRows([updateTable]);
+           setDay1Total( parseInt(updateTable['day1']));
+           setDay2Total(parseInt(updateTable['day2']));
+           setDay3Total(parseInt(updateTable['day3']));
+           setDay4Total(parseInt(updateTable['day4']));
+           setDay5Total(parseInt(updateTable['day5']));
+           setDay6Total(parseInt(updateTable['day6']));
+           setDay7Total(parseInt(updateTable['day7']));
            };
            if(window.location.href.includes("details")) {
-            const employeesData= JSON.parse(localStorage.getItem('EmployeesData'));
-            console.log(employeesData);
-            if(employeesData && employeesData.length) {
-             let timesheetData =   Object.values(Object.values(JSON.parse(employeesData[0]))[0])[0];
-             setTimeSheetRows(timesheetData);
-             setDay1Total(timesheetData.reduce((total, row) => total + parseInt(row['day1']), 0));
-             setDay2Total(timesheetData.reduce((total, row) => total + parseInt(row['day2']), 0));
-             setDay3Total(timesheetData.reduce((total, row) => total + parseInt(row['day3']), 0));
-             setDay4Total(timesheetData.reduce((total, row) => total + parseInt(row['day4']), 0));
-             setDay5Total(timesheetData.reduce((total, row) => total + parseInt(row['day5']), 0));
-             setDay6Total(timesheetData.reduce((total, row) => total + parseInt(row['day6']), 0));
-             setDay7Total(timesheetData.reduce((total, row) => total + parseInt(row['day7']), 0));
+          
+            
             }
        
         }
@@ -420,17 +425,17 @@ console.log(timeSheetRows);
                         <tr className='bg-primary'>
                             <th className='col-md-2'>ProjectCode</th>
                             <th className='col-md-2'>JobCode</th>
-                            {selectedDates && selectedDates.length > 0 && selectedDates.map((date) => {
-                                return <th>{date ?? ''}</th>
+                            {selectedDates && selectedDates.length > 0 && selectedDates.map((date, index) => {
+                                return <th key={index}>{date ?? ''}</th>
                             })}
-                            <th className='col-md-1'></th>
-                            <th className='col-md-2' Style={'width:12px;'}>Total</th>
+                            {role !== 'manager' && <th className='col-md-1'></th>}
+                            <th className='col-md-2' >Total</th>
                         </tr>
                     </thead>
                     <tbody id="table-body">
                         {timeSheetRows && timeSheetRows.length > 0 && timeSheetRows.map((row, index) => {
                             return (
-                                <tr>
+                                <tr key={index}>
                                     <td className='col-md-3'>
                                         <div className="container">
                                             <div className="row justify-content-md-center">
@@ -496,13 +501,13 @@ console.log(timeSheetRows);
                                     <td className='col-md-1'><input type="text" class="form-control" value={row.day5} onChange={(event) => changeTimeSheetData('day5', index, Math.min(event.target.value, 16))} /></td>
                                     <td className='col-md-1'><input type="text" class="form-control" value={row.day6} onChange={(event) => changeTimeSheetData('day6', index, Math.min(event.target.value, 16))} /></td>
                                     <td className='col-md-2'><input type="text" class="form-control" value={row.day7} onChange={(event) => changeTimeSheetData('day7', index, Math.min(event.target.value, 16))} /></td>
-
+                                    {role !== 'manager' && 
                                     <td>
-                                    {role !== 'manager' &&<button class="btn" onClick={() => { deleteTableRow(index) }}>
+                                   <button class="btn" onClick={() => { deleteTableRow(index) }}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
                                                 <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
-                                            </svg></button>}</td>
+                                            </svg></button></td>}
                                    
                                     <td className='col-md-1'>{row.total}</td>
 
@@ -519,7 +524,7 @@ console.log(timeSheetRows);
                             <td className='col-md-1'><p>{day5Total}</p></td>
                             <td className='col-md-1'><p>{day6Total}</p></td>
                             <td className='col-md-1'>{day7Total}</td>
-                            <td className='col-md-1'></td>
+                            {role !== 'manager' && <td className='col-md-1'></td>}
                             <td className='col-md-1'><p>{day1Total + day2Total + day3Total + day4Total + day5Total + day6Total + day7Total}</p></td>
                             
                         </tr>
