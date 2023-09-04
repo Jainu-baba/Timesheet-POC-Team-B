@@ -4,6 +4,7 @@ import { useState } from 'react';
 import DateRange from './DateRange.json';
 import projectData from "../../mock-data/project-codes.json";
 import jobData from "../../mock-data/job-codes.json";
+import Select from 'react-select';
 
 const TimeSheetEntry = () => {
 
@@ -40,7 +41,7 @@ const TimeSheetEntry = () => {
 
 
     const [projectCodes, setProjectCodes] = useState([]);
-
+    const [employeeName, setEmployeeName] = useState('');
     const [jobCodes, setJobCodes] = useState([]);
 
     useEffect(() => {
@@ -51,13 +52,13 @@ const TimeSheetEntry = () => {
         setJobCodes(jobData);
     }, []);
 
-    useEffect(() => {
-        console.log('timesheet updated:', timeSheetRows);
-    }, [timeSheetRows]);
+    const handleEmployee = (empName) => {
+        setEmployeeName(empName);
+        localStorage.setItem('employeeName', empName);
+        localStorage.setItem(empName, '');
+    }
 
-    useEffect(() => {
-        console.log('jobcodes:', jobCodes);
-    }, [jobCodes]);
+    
     // const onTextChanged = (e,type) => {
     //     console.log('type',type);
     //     let suggestions = [];
@@ -176,7 +177,20 @@ const TimeSheetEntry = () => {
         rows[index][key] = value;
         setTimeSheetRows([...rows]);
     }
-    const changeTimeSheetData = async (key, index, value) => {
+    const handleProjectCode = (code, i, data ) => {
+ 
+timeSheetRows.map((obj, index) => {
+    if(index === i) {
+        obj[code] = data.value
+        return obj;
+    }
+   
+} 
+
+);
+console.log(timeSheetRows);
+    }
+    const changeTimeSheetData = async(key, index, value) => {
         console.log('key:', key, 'index:', index, 'value:', value);
         const rows = [...timeSheetRows];
         rows[index][key] = value;
@@ -226,34 +240,30 @@ const TimeSheetEntry = () => {
         // getAutoSuggestions('job',projectCode)
     }
 
-    // const getAutoSuggestions=(type,index,value)=>{
+    const submitData = () => {
 
-    //     console.log('getAutoSuggestions:',type,value);
-    //     let suggestions = [];
-    // if (type === 'project') {
-    //     if (value.length > 0) {
-    //         const regex = new RegExp(`^${value}`, 'i');
-    //         suggestions = projectCodes.map(ele =>ele.code).sort().filter(v => regex.test(v));
-    //     }
-    //     setText(value)
-    // }
-    //     if (type === 'job') {
-    //         if (value.length > 0) {
-    //             const regex = new RegExp(`^${value}`, 'i');
-    //             suggestions = jobCodes.map(ele => ele.projectCode===value && ele.jobCode).sort().filter(v => regex.test(v));
-    //         }
-    //         setjobText(value)
-    //     }
-    //     return suggestions;
-    //     // setSuggestions(suggestions);
-    // }
+        const empData = localStorage.getItem("empData");
+        console.log(JSON.parse(empData));
+        let oldData = localStorage.getItem('EmployeesData') ? JSON.parse(localStorage.getItem('EmployeesData')) : [];
+        oldData.push(empData);
+        localStorage.setItem('EmployeesData', JSON.stringify(oldData));
+       // handleClickOpen();
+        // setTimeout(() => {
+        //     handleClose();
+        // }, 2000);
+    }
 
     return (
         <>
             <div class="container mt-4">
                 <div class="employee-select">
-                    <select class="form-control employee-name">
-                        <option>Employee Name</option>
+                    <select class="form-control employee-name"  value={employeeName} onChange={(event) => handleEmployee(event.target.value)}>
+                    <option>Employee Name</option>
+                        <option>Bhargavi</option>
+                        <option>Karthik</option>
+                        <option>Ejaz</option>
+                        <option>Rakesh</option>
+                        <option>Jainu</option>
                     </select>
                     <div className='col-md-3'>
                         <select className='entry-selectbox' value={selectedDate} onChange={handleDropdownChange}>
@@ -264,7 +274,7 @@ const TimeSheetEntry = () => {
                             ))}
                         </select>
                     </div>
-                    <button class="btn btn-primary">Submit</button>
+                    <button class="btn btn-primary" onClick={submitData}>Submit</button>
                 </div>
 
                 <table class="table table-bordered text-center">
@@ -287,7 +297,14 @@ const TimeSheetEntry = () => {
                                         <div className="container">
                                             <div className="row justify-content-md-center">
                                                 <div className="col-md-12 input">
-                                                    <input value={row.projectCode} onChange={(e) => { changeTimeSheetData('projects', index, e.target.value) }} type="text" placeHolder="Search" class="form-control" />
+                                                <Select
+                                                   defaultValue={row.projectCode}
+                                                   options={projectData}
+                                                   onChange={(e) => handleProjectCode("projectCode",index, e)}
+                                                   />
+       
+        
+                                                    {/* <input value={row.projectCode} onChange={(e) => { changeTimeSheetData('projects', index, e.target.value) }} type="text" placeHolder="Search" class="form-control" /> */}
                                                 </div>
                                                 <div className="col-md-12 justify-content-md-center" id={`auto_suggestion_${index}`}>
                                                     {/* {renderSuggestions('project',index)} */}
@@ -306,11 +323,16 @@ const TimeSheetEntry = () => {
                                             </div>
                                         </div>
                                     </td>
-                                    <td className='col-md-2'>
+                                    <td className='col-md-3'>
                                         <div className="container">
                                             <div className="row justify-content-md-center">
                                                 <div className="col-md-12 input">
-                                                    <input value={row.jobCode} onChange={(e) => { changeTimeSheetData('projectCode', index, e.target.value) }} type="text" placeHolder="Search" class="form-control" />
+                                                <Select
+                                                   defaultValue={row.jobCode}
+                                                   options={jobCodes}
+                                                   onChange={(e) => handleProjectCode("jobCode",index, e)}
+                                                   />
+                                                    {/* <input value={row.jobCode} onChange={(e) => { changeTimeSheetData('projectCode', index, e.target.value) }} type="text" placeHolder="Search" class="form-control" /> */}
                                                 </div>
                                                 <div className="col-md-12 justify-content-md-center">
                                                     {/* {renderSuggestions('job')} */}
