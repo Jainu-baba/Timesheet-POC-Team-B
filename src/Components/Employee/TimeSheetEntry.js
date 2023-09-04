@@ -22,6 +22,8 @@ const TimeSheetEntry = () => {
     const [selectedDate, setselectedDate] = React.useState(null);
     const [comments,setComments] = useState('');
     const [open, setOpen] = React.useState(false); 
+    const [currentpojectCode,setcurrentpojectCode] = React.useState(null);
+    const [currentjobCode,setcurrentjobCode] = React.useState(null);
 
     const [suggestions, setSuggestions] = useState([]);
     const [text, setText] = useState('');
@@ -31,10 +33,8 @@ const TimeSheetEntry = () => {
 
 
     const [timeSheetRows, setTimeSheetRows] = useState([
-        { projectCode: '', jobCode: '', day1: 0, day2: 0, day3: 0, day4: 0, day5: 0, day6: 0, day7: 0, total: 0 },
-        { projectCode: '', jobCode: '', day1: 0, day2: 0, day3: 0, day4: 0, day5: 0, day6: 0, day7: 0, total: 0 },
-        { projectCode: '', jobCode: '', day1: 0, day2: 0, day3: 0, day4: 0, day5: 0, day6: 0, day7: 0, total: 0 },
-        { projectCode: '', jobCode: '', day1: 0, day2: 0, day3: 0, day4: 0, day5: 0, day6: 0, day7: 0, total: 0 }]);
+        { projectCode: '', jobCode: '', day1: 0, day2: 0, day3: 0, day4: 0, day5: 0, day6: 0, day7: 0, total: 0 }]
+       );
 
     // dayswise column sum
     const [day1Total, setDay1Total] = useState(0);
@@ -102,7 +102,36 @@ const TimeSheetEntry = () => {
         console.log(DateRange[0].dates);
         setProjectCodes(projectData);
         setJobCodes(jobData);
+        if (window.location.href.includes("details")) {        
+            const employeesData= JSON.parse(localStorage.getItem('EmployeesData'));
+            const pathname = window.location.pathname;
+            const name = pathname.split("/")[2];
+            setEmployeeName(name);
+            console.log(employeesData);    
+          let date = employeesData.length && Object.values(JSON.parse(employeesData[0]))[0].dateIndex;
+          setselectedDate(date);
+          setSelectedRange(dateRanges[date]);
+          setSelectedDates(dateRanges[date]?.dates)
+           };
+           if(window.location.href.includes("details")) {
+            const employeesData= JSON.parse(localStorage.getItem('EmployeesData'));
+            console.log(employeesData);
+            if(employeesData && employeesData.length) {
+             let timesheetData =   Object.values(Object.values(JSON.parse(employeesData[0]))[0])[0];
+             setTimeSheetRows(timesheetData);
+             setDay1Total(timesheetData.reduce((total, row) => total + parseInt(row['day1']), 0));
+             setDay2Total(timesheetData.reduce((total, row) => total + parseInt(row['day2']), 0));
+             setDay3Total(timesheetData.reduce((total, row) => total + parseInt(row['day3']), 0));
+             setDay4Total(timesheetData.reduce((total, row) => total + parseInt(row['day4']), 0));
+             setDay5Total(timesheetData.reduce((total, row) => total + parseInt(row['day5']), 0));
+             setDay6Total(timesheetData.reduce((total, row) => total + parseInt(row['day6']), 0));
+             setDay7Total(timesheetData.reduce((total, row) => total + parseInt(row['day7']), 0));
+            }
+       
+        }
     }, []);
+   
+
 
     const handleEmployee = (empName) => {
         setEmployeeName(empName);
@@ -241,7 +270,13 @@ const TimeSheetEntry = () => {
         setTimeSheetRows([...rows]);
     }
     const handleProjectCode = (code, i, data ) => {
- 
+        if(code === "projectCode") {
+            setcurrentpojectCode(data);
+        }
+        if(code === "jobCode") {
+            setcurrentjobCode(data);
+        }
+      
 timeSheetRows.map((obj, index) => {
     if(index === i) {
         obj[code] = data.value
@@ -293,7 +328,16 @@ console.log(timeSheetRows);
         setDay7Total(rows.reduce((total, row) => total + parseInt(row['day7']), 0));
 
         setTimeSheetRows([...rows]);
-        console.log(rows);
+        const empName = localStorage.getItem('employeeName');
+        console.log(empName);
+        const dateRange = localStorage.getItem('dateRange');
+        const dateIndex = localStorage.getItem('selectedDateRangeIndex');
+        if (empName && dateRange) {
+          const empData = { [empName]: { [dateRange]: rows, dateIndex: dateIndex } };
+    
+          localStorage.setItem("empData", JSON.stringify(empData))
+    
+        }
     }
 
     const getJobCodes = (projectCode) => {
@@ -380,21 +424,22 @@ console.log(timeSheetRows);
                                 return <th>{date ?? ''}</th>
                             })}
                             <th className='col-md-1'></th>
-                            <th className='col-md-2' Style={'width:12px;'}>Total </th>
+                            <th className='col-md-2' Style={'width:12px;'}>Total</th>
                         </tr>
                     </thead>
                     <tbody id="table-body">
                         {timeSheetRows && timeSheetRows.length > 0 && timeSheetRows.map((row, index) => {
                             return (
                                 <tr>
-                                    <td className='col-md-2'>
+                                    <td className='col-md-3'>
                                         <div className="container">
                                             <div className="row justify-content-md-center">
                                                 <div className="col-md-12 input">
                                                 {role === 'manager' &&  <input type="text" disabled value={row.projectCode}   role="textbox"/>}
                                                 {role !== 'manager' &&
                                                 <Select
-                                                   defaultValue={row.projectCode}
+                                               defaultValue={currentpojectCode}
+                                                value={{value: row.projectCode, label:row.projectCode }}
                                                    options={projectData}
                                                    onChange={(e) => handleProjectCode("projectCode",index, e)}
                                                    />
@@ -429,7 +474,9 @@ console.log(timeSheetRows);
                                                 {role === 'manager' &&  <input typ="text" value={row.jobCode}  disabled style={{height: "35px"}} role="textbox"/>}
                                                 {role !== 'manager' &&  
                                                 <Select
-                                                   defaultValue={row.jobCode}
+                                                    defaultValue={currentjobCode}
+                                                    value={{value: row.jobCode, label: row.jobCode }}
+                                                 
                                                    options={jobCodes}
                                                    onChange={(e) => handleProjectCode("jobCode",index, e)}
                                                    />
@@ -448,7 +495,7 @@ console.log(timeSheetRows);
                                     <td className='col-md-1'><input type="text" class="form-control" value={row.day4} onChange={(event) => changeTimeSheetData('day4', index, Math.min(event.target.value, 16))} /></td>
                                     <td className='col-md-1'><input type="text" class="form-control" value={row.day5} onChange={(event) => changeTimeSheetData('day5', index, Math.min(event.target.value, 16))} /></td>
                                     <td className='col-md-1'><input type="text" class="form-control" value={row.day6} onChange={(event) => changeTimeSheetData('day6', index, Math.min(event.target.value, 16))} /></td>
-                                    <td className='col-md-1'><input type="text" class="form-control" value={row.day7} onChange={(event) => changeTimeSheetData('day7', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-2'><input type="text" class="form-control" value={row.day7} onChange={(event) => changeTimeSheetData('day7', index, Math.min(event.target.value, 16))} /></td>
 
                                     <td>
                                     {role !== 'manager' &&<button class="btn" onClick={() => { deleteTableRow(index) }}>
@@ -456,7 +503,8 @@ console.log(timeSheetRows);
                                                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
                                                 <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
                                             </svg></button>}</td>
-                                    <td className='col-md-1'><input type="text" class="form-control" value={row.total} /></td>
+                                   
+                                    <td className='col-md-1'>{row.total}</td>
 
                                 </tr>
                             )
