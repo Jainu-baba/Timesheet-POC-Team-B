@@ -73,6 +73,7 @@
     -moz-appearance: none;
     appearance: none;
     border: 1px solid #c7c7c7; 
+    margin-right: 20px;
     
     
     
@@ -192,4 +193,10 @@
   }
   .dates{
     width: 210px;
+  }
+  .employee-name{
+    width:200px
+  }
+  .table-dark{
+    margin-right: 20px;
   }

@@ -1,20 +1,27 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react';
-
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import Snackbar from '@mui/material/Snackbar';
+import { useNavigate } from "react-router-dom";
 import DateRange from './DateRange.json';
 import projectData from "../../mock-data/project-codes.json";
 import jobData from "../../mock-data/job-codes.json";
 import Select from 'react-select';
+import MuiAlert from '@mui/material/Alert';
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
 
 const TimeSheetEntry = () => {
-
-
+    const naviagate = useNavigate();
+    const role = localStorage.getItem("role") ?? 'employee';
     const [dateRanges, setDateRanges] = useState(DateRange);
     const [selectedDates, setSelectedDates] = useState(['', '', '', '', '', '', '']);
     const [selectedRange, setSelectedRange] = useState(null);
     const [selectedDate, setselectedDate] = React.useState(null);
-
-
+    const [comments,setComments] = useState('');
+    const [open, setOpen] = React.useState(false); 
 
     const [suggestions, setSuggestions] = useState([]);
     const [text, setText] = useState('');
@@ -43,8 +50,53 @@ const TimeSheetEntry = () => {
     const [projectCodes, setProjectCodes] = useState([]);
     const [employeeName, setEmployeeName] = useState('');
     const [jobCodes, setJobCodes] = useState([]);
+    var vertical = "top";
+    var horizontal = "center";
+    const [toastOpen, settoastOpen] = React.useState(false);
+    const [rejectoast, setrejectoast] = React.useState(false);
+    const [employees, setEmployees] = useState(
+        ['Bhargavi',
+            'Karthik',
+            'Rakesh']);
+    const [employee, setEmployee] = useState('');
+
+    const BacktoManagerApprove = () => {
+        localStorage.setItem("approved", true);
+        settoastOpen(true);
+        setTimeout(() => naviagate("/manager"), 1000);
+       
+
+
+    }
+    const BacktoManagerRejected = () => {
+        setrejectoast(true);
+        setTimeout(() => naviagate("/manager"), 1000);
+        localStorage.setItem("approved", true);
+
+
+    }
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+    const handleToastClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        settoastOpen(false);
+        setrejectoast(false);
+      };
+
+
 
     useEffect(() => {
+        setEmployees(['Bhargavi',
+            'Karthik',
+            'Rakesh'])
         setDateRanges(DateRange);
         setSelectedDates(DateRange[0].dates)
         console.log(DateRange[0].dates);
@@ -172,6 +224,17 @@ const TimeSheetEntry = () => {
     //   li.appendChild(text);
     //   ul.appendChild(li);
     // }
+    const onEmployeeChanged = (e) => {
+        let suggestions = [];
+        const value = e.target.value;
+        if (value.length > 0) {
+            const regex = new RegExp(`^${value}`, 'i');
+            suggestions = employees.sort().filter(v => regex.test(v));
+        }
+        console.log('suggestions:', suggestions);
+        setEmployee(value);
+        setSuggestions(suggestions);
+    }
     const suggestionSelectedVal = (key, index, value, type) => {
         const rows = [...timeSheetRows];
         rows[index][key] = value;
@@ -255,16 +318,43 @@ console.log(timeSheetRows);
 
     return (
         <>
+         <Snackbar anchorOrigin={{ vertical, horizontal }} open={toastOpen} autoHideDuration={6000} onClose={handleToastClose}>
+                <Alert onClose={handleToastClose} severity="success" sx={{ width: '100%' }}>
+                    Applied successfully
+                </Alert>
+            </Snackbar>
+            <Snackbar anchorOrigin={{ vertical, horizontal }} open={rejectoast} autoHideDuration={6000} onClose={handleToastClose}>
+                <Alert onClose={handleToastClose} severity="warning" sx={{ width: '100%' }}>
+                    Rejected successfully
+                </Alert>
+            </Snackbar>
+            <Snackbar anchorOrigin={{ vertical, horizontal }} open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+         Submitted timesheet
+        </Alert>
+      </Snackbar>
             <div class="container mt-4">
                 <div class="employee-select">
-                    <select class="form-control employee-name"  value={employeeName} onChange={(event) => handleEmployee(event.target.value)}>
+                     <select class="employee-name"  value={employeeName} onChange={(event) => handleEmployee(event.target.value)}>
                     <option>Employee Name</option>
                         <option>Bhargavi</option>
                         <option>Karthik</option>
                         <option>Ejaz</option>
                         <option>Rakesh</option>
                         <option>Jainu</option>
-                    </select>
+                    </select> 
+                    {/* <div className='col-md-4'>                       
+                        <div className="container">
+                            <div className="row justify-content-md-center">
+                                <div className="col-md-12 input">
+                                    <input value={employee} onChange={onEmployeeChanged} type="text" placeHolder="Employee Name" class="form-control" />
+                                </div>
+                                <div className="col-md-12 justify-content-md-center">
+                                    {renderSuggestions('employee')}
+                                </div>
+                            </div>
+                        </div>
+                    </div> */}
                     <div className='col-md-3'>
                         <select className='entry-selectbox' value={selectedDate} onChange={handleDropdownChange}>
                             {dateRanges.map((range, index) => (
@@ -274,11 +364,15 @@ console.log(timeSheetRows);
                             ))}
                         </select>
                     </div>
-                    <button class="btn btn-primary" onClick={submitData}>Submit</button>
+                    {role !== 'manager' && <button class="btn btn-primary" onClick={submitData} disabled={!(employeeName && selectedRange) ? 'true' : ''}>Submit</button>}
+                    {role === 'manager' && <Stack direction="row" spacing={2}>
+                        <Button variant="contained" color="success" onClick={(e) => BacktoManagerApprove()}>Approve</Button>
+                        <Button variant="contained" color="error" onClick={(e) => BacktoManagerRejected()} >Reject</Button>
+                    </Stack>}
                 </div>
 
                 <table class="table table-bordered text-center">
-                    <thead className='thead-dark'>
+                    <thead className='table-secondary'>
                         <tr className='bg-primary'>
                             <th className='col-md-2'>ProjectCode</th>
                             <th className='col-md-2'>JobCode</th>
@@ -297,6 +391,8 @@ console.log(timeSheetRows);
                                         <div className="container">
                                             <div className="row justify-content-md-center">
                                                 <div className="col-md-12 input">
+                                                {role === 'manager' &&  <input type="text" disabled value={row.projectCode}   role="textbox"/>}
+                                                {role !== 'manager' &&
                                                 <Select
                                                    defaultValue={row.projectCode}
                                                    options={projectData}
@@ -304,8 +400,9 @@ console.log(timeSheetRows);
                                                    />
        
         
-                                                    {/* <input value={row.projectCode} onChange={(e) => { changeTimeSheetData('projects', index, e.target.value) }} type="text" placeHolder="Search" class="form-control" /> */}
+                            } 
                                                 </div>
+                                               
                                                 <div className="col-md-12 justify-content-md-center" id={`auto_suggestion_${index}`}>
                                                     {/* {renderSuggestions('project',index)} */}
                                                     <div className="srchList" id={`auto_suggestion_${index}_srchList`}>
@@ -321,17 +418,22 @@ console.log(timeSheetRows);
 
                                                 </div>
                                             </div>
+                        
                                         </div>
+
                                     </td>
                                     <td className='col-md-3'>
                                         <div className="container">
                                             <div className="row justify-content-md-center">
                                                 <div className="col-md-12 input">
+                                                {role === 'manager' &&  <input typ="text" value={row.jobCode}  disabled style={{height: "35px"}} role="textbox"/>}
+                                                {role !== 'manager' &&  
                                                 <Select
                                                    defaultValue={row.jobCode}
                                                    options={jobCodes}
                                                    onChange={(e) => handleProjectCode("jobCode",index, e)}
                                                    />
+                                            }
                                                     {/* <input value={row.jobCode} onChange={(e) => { changeTimeSheetData('projectCode', index, e.target.value) }} type="text" placeHolder="Search" class="form-control" /> */}
                                                 </div>
                                                 <div className="col-md-12 justify-content-md-center">
@@ -349,18 +451,18 @@ console.log(timeSheetRows);
                                     <td className='col-md-1'><input type="text" class="form-control" value={row.day7} onChange={(event) => changeTimeSheetData('day7', index, Math.min(event.target.value, 16))} /></td>
 
                                     <td>
-                                        <button class="btn" onClick={() => { deleteTableRow(index) }}>
+                                    {role !== 'manager' &&<button class="btn" onClick={() => { deleteTableRow(index) }}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
                                                 <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
-                                            </svg></button></td>
+                                            </svg></button>}</td>
                                     <td className='col-md-1'><input type="text" class="form-control" value={row.total} /></td>
 
                                 </tr>
                             )
                         })}
                         <tr>
-                            <td className='col-md-2'></td>
+                            <td className='col-md-2'>{role !== 'manager' && <button class="" id="add-row" onClick={addTableRow}>Add Row</button>}</td>
                             <td className='col-md-2'></td>
                             <td className='col-md-1'><p>{day1Total}</p></td>
                             <td className='col-md-1'><p>{day2Total}</p></td>
@@ -371,10 +473,12 @@ console.log(timeSheetRows);
                             <td className='col-md-1'>{day7Total}</td>
                             <td className='col-md-1'></td>
                             <td className='col-md-1'><p>{day1Total + day2Total + day3Total + day4Total + day5Total + day6Total + day7Total}</p></td>
+                            
                         </tr>
+                        <td> {role == 'manager' && <input type="text" value={comments} onChange={(e)=>setComments(e.target.value)} placeholder='comments' style={{marginTop:'30px',width:'450%',height:'50px',border:'1px solid black'}}/>}</td>
                     </tbody>
                 </table>
-                <button class="btn btn-primary" id="add-row" onClick={addTableRow}>Add Row</button>
+                {/* {role !== 'manager' && <button class="btn btn-primary" id="add-row" onClick={addTableRow}>Add Row</button>} */}
             </div>
         </>
 
