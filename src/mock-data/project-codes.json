@@ -9,6 +9,18 @@
     },
     {
         "id": 3,
-        "code": "testing"
+        "code": "WFS_1103"
+    },
+    {
+        "id": 4,
+        "code": "WFS_1104"
+    },
+    {
+        "id": 5,
+        "code": "WFS_1105"
+    },
+    {
+        "id": 6,
+        "code": "WFS_1106"
     }
 ]

@@ -8,8 +8,8 @@ const Home = () => {
   return (
     <div>
       <div className="mainButton">
-        <Button variant="contained" size="large" onClick={() => navigate("/employee")}>Employee</Button>
-        <Button variant="contained" size="large" onClick={() => navigate("/manager")}>Manager</Button>
+        <Button variant="contained" color="success" size="large" onClick={() => navigate("/employee")} className="button">Employee</Button>
+        <Button variant="contained" color='success' size="large" onClick={() => navigate("/manager")}>Manager</Button>
       </div>
 
     </div>

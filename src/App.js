@@ -3,6 +3,7 @@ import Home from "./Components/Home/Home";
 import Manager from "./Components/Manager/Manager";
 import Employee from "./Components/Employee/Employee";
 import Details from "./Components/TimesheetDetails/Details";
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 

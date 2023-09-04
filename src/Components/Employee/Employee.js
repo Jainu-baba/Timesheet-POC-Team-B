@@ -51,7 +51,7 @@ export default function Employee() {
 
   return (
     <div className='time-sheet-box'>
-      <TimeSheet />
+      {/* <TimeSheet /> */}
       <TimeSheetEntry />
       
     </div>
