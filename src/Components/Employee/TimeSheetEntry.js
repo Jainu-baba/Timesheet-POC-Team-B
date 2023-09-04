@@ -354,10 +354,10 @@ console.log(timeSheetRows);
         let oldData = localStorage.getItem('EmployeesData') ? JSON.parse(localStorage.getItem('EmployeesData')) : [];
         oldData.push(empData);
         localStorage.setItem('EmployeesData', JSON.stringify(oldData));
-       // handleClickOpen();
-        // setTimeout(() => {
-        //     handleClose();
-        // }, 2000);
+       handleClickOpen();
+        setTimeout(() => {
+           handleClose();
+        }, 2000);
     }
 
     return (
@@ -399,8 +399,8 @@ console.log(timeSheetRows);
                             </div>
                         </div>
                     </div> */}
-                    <div className='col-md-3'>
-                        <select className='entry-selectbox' value={selectedDate} onChange={handleDropdownChange}>
+                    <div className='col-md-7'>
+                        <select className='employee-name' value={selectedDate} onChange={handleDropdownChange}>
                             {dateRanges.map((range, index) => (
                                 <option key={index} value={index}>
                                     {range.fromDate} - {range.toDate}
@@ -408,14 +408,14 @@ console.log(timeSheetRows);
                             ))}
                         </select>
                     </div>
-                    {role !== 'manager' && <button class="btn btn-primary" onClick={submitData} disabled={!(employeeName && selectedRange) ? 'true' : ''}>Submit</button>}
+                    {role !== 'manager' && <button class="btn btn-primary" onClick={submitData} disabled={!(employeeName && timeSheetRows[0].projectCode.length>0 && timeSheetRows[0].jobCode.length>0) ? 'true' : ''} className='timesheet-button'>Submit</button>}
                     {role === 'manager' && <Stack direction="row" spacing={2}>
                         <Button variant="contained" color="success" onClick={(e) => BacktoManagerApprove()}>Approve</Button>
                         <Button variant="contained" color="error" onClick={(e) => BacktoManagerRejected()} >Reject</Button>
                     </Stack>}
                 </div>
 
-                <table class="table table-bordered text-center">
+                <table class="table table-bordered text-center" cellspacing="0">
                     <thead className='table-secondary'>
                         <tr className='bg-primary'>
                             <th className='col-md-2'>ProjectCode</th>
@@ -423,7 +423,7 @@ console.log(timeSheetRows);
                             {selectedDates && selectedDates.length > 0 && selectedDates.map((date) => {
                                 return <th>{date ?? ''}</th>
                             })}
-                            <th className='col-md-1'></th>
+                            <th className='col-md-1'>Delete</th>
                             <th className='col-md-2' Style={'width:12px;'}>Total</th>
                         </tr>
                     </thead>
@@ -489,17 +489,18 @@ console.log(timeSheetRows);
                                             </div>
                                         </div>
                                     </td>
-                                    <td className='col-md-1'><input type="text" class="form-control" value={row.day1} onChange={(event) => changeTimeSheetData('day1', index, Math.min(event.target.value, 16))} /></td>
-                                    <td className='col-md-1'><input type="text" class="form-control" value={row.day2} onChange={(event) => changeTimeSheetData('day2', index, Math.min(event.target.value, 16))} /></td>
-                                    <td className='col-md-1'><input type="text" class="form-control" value={row.day3} onChange={(event) => changeTimeSheetData('day3', index, Math.min(event.target.value, 16))} /></td>
-                                    <td className='col-md-1'><input type="text" class="form-control" value={row.day4} onChange={(event) => changeTimeSheetData('day4', index, Math.min(event.target.value, 16))} /></td>
-                                    <td className='col-md-1'><input type="text" class="form-control" value={row.day5} onChange={(event) => changeTimeSheetData('day5', index, Math.min(event.target.value, 16))} /></td>
-                                    <td className='col-md-1'><input type="text" class="form-control" value={row.day6} onChange={(event) => changeTimeSheetData('day6', index, Math.min(event.target.value, 16))} /></td>
-                                    <td className='col-md-2'><input type="text" class="form-control" value={row.day7} onChange={(event) => changeTimeSheetData('day7', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day1} onChange={(event) => changeTimeSheetData('day1', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day2} onChange={(event) => changeTimeSheetData('day2', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day3} onChange={(event) => changeTimeSheetData('day3', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day4} onChange={(event) => changeTimeSheetData('day4', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day5} onChange={(event) => changeTimeSheetData('day5', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day6} onChange={(event) => changeTimeSheetData('day6', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day6} onChange={(event) => changeTimeSheetData('day6', index, Math.min(event.target.value, 16))} /></td>
+                                    {/* <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day7} onChange={(event) => changeTimeSheetData('day7', index, Math.min(event.target.value, 16))} /></td> */}
 
                                     <td>
                                     {role !== 'manager' &&<button class="btn" onClick={() => { deleteTableRow(index) }}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
                                                 <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
                                             </svg></button>}</td>
@@ -510,20 +511,20 @@ console.log(timeSheetRows);
                             )
                         })}
                         <tr>
-                            <td className='col-md-2'>{role !== 'manager' && <button class="" id="add-row" onClick={addTableRow}>Add Row</button>}</td>
+                            <td className='col-md-2'>{role !== 'manager' && <button class="btn btn-secondary" id="add-row" onClick={addTableRow} style={{height:'40px',width:'150px'}}>Add Row</button>}</td>
                             <td className='col-md-2'></td>
-                            <td className='col-md-1'><p>{day1Total}</p></td>
-                            <td className='col-md-1'><p>{day2Total}</p></td>
-                            <td className='col-md-1'><p>{day3Total}</p></td>
-                            <td className='col-md-1'><p>{day4Total}</p></td>
-                            <td className='col-md-1'><p>{day5Total}</p></td>
-                            <td className='col-md-1'><p>{day6Total}</p></td>
-                            <td className='col-md-1'>{day7Total}</td>
-                            <td className='col-md-1'></td>
-                            <td className='col-md-1'><p>{day1Total + day2Total + day3Total + day4Total + day5Total + day6Total + day7Total}</p></td>
+                            <td className='col-md-1 text-center'><p>{day1Total}</p></td>
+                            <td className='col-md-1 text-center'><p>{day2Total}</p></td>
+                            <td className='col-md-1 text-center'><p>{day3Total}</p></td>
+                            <td className='col-md-1 text-center'><p>{day4Total}</p></td>
+                            <td className='col-md-1 text-center'><p>{day5Total}</p></td>
+                            <td className='col-md-1 text-center'><p>{day6Total}</p></td>
+                            <td className='col-md-1 text-center'><p>{day7Total}</p></td>
+                            <td className='col-md-1 text-center'></td>
+                            <td className='col-md-1 text-center'><p>{day1Total + day2Total + day3Total + day4Total + day5Total + day6Total + day7Total}</p></td>
                             
                         </tr>
-                        <td> {role == 'manager' && <input type="text" value={comments} onChange={(e)=>setComments(e.target.value)} placeholder='comments' style={{marginTop:'30px',width:'450%',height:'50px',border:'1px solid black'}}/>}</td>
+                        <td> {role == 'manager' && <input type="text" value={comments} onChange={(e)=>setComments(e.target.value)} placeholder='comments' style={{marginTop:'20px',width:'400%',height:'50px',border:'1px solid #D6EAF8'}}/>}</td>
                     </tbody>
                 </table>
                 {/* {role !== 'manager' && <button class="btn btn-primary" id="add-row" onClick={addTableRow}>Add Row</button>} */}
