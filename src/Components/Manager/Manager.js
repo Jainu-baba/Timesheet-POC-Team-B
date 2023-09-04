@@ -113,7 +113,7 @@ const Manager = () => {
   const apply = () => {
     var newRows = [];
     settoastOpen(true);
-    rows.forEach((row, i) => {
+    rowsData.forEach((row, i) => {
       selectedRows.forEach((e, id) => {
 
         if(e.id !== row.id) {
@@ -133,7 +133,7 @@ const Manager = () => {
   const reject = () => {
     var Rows = [];
     setrejectoast(true);
-    rows.forEach((row, i) => {
+    rowsData.forEach((row, i) => {
       selectedRows.forEach((e, id) => {
 
         if(e.id !== row.id) {
@@ -216,9 +216,9 @@ const Manager = () => {
             }}
 
             onRowSelectionModelChange={(ids) => {
-              const newIds = ids.map(e => e +1);
-              const selectedIDs = new Set(newIds);
-              const selectedRows = rows.filter((row) =>
+              //const newIds = ids.map(e => e +1);
+              const selectedIDs = new Set(ids);
+              const selectedRows = rowsData.filter((row) =>
                 selectedIDs.has(row.id),
               );
 
