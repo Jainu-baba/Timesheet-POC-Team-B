@@ -1,14 +1,16 @@
 .mainButton {
     display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
+    flex-direction: column;
+    justify-content: space-evenly; 
     background-image: url('https://media.istockphoto.com/id/1314193499/vector/calendar-and-stopwatch-flat-icon-calendar-schedule-time-appointment-and-planning-organizer.jpg?s=612x612&w=0&k=20&c=4RzzsxNcaapnoG0ivGA8_4lK9RsVfWBPfFArUygMA-E=');
     background-repeat: no-repeat;
-    background-size: 60%;
+    background-size: 50%;
     align-items: center;
     height: 100dvh;
     background-color: #0099dc;
+    
+    
 }
 .button{
-    color:aliceblue
+    margin-right: 800%;
 }

@@ -102,7 +102,8 @@
 
 .timesheet-button{
     border: 1px solid var(--btn-fa-b);
-    color: var(--input-c); ;
+    /* color: var(--input-c);  */
+    color:white;
     position: relative;
     font-size: 14px;
     padding: 6px 8px;
@@ -113,7 +114,10 @@
     text-align: center;
     background:#EEEEEE;
     border: 1px solid #c7c7c7;
-  background-color:#EAF2F8;
+    border-radius: 0.25rem;
+  background-color:#007bff;
+    width:150px;
+    height:38px;
   margin-right: 40px;
 
 }
@@ -195,8 +199,14 @@
     width: 210px;
   }
   .employee-name{
-    width:200px
+    width:220px;
+    height:38px;
+    border: 1px solid #c7c7c7; 
+    border-radius: 0.25rem;
   }
   .table-dark{
     margin-right: 20px;
+  }
+   table{
+    border-spacing:0 ;
   }
