@@ -1,31 +1,31 @@
 [
     {
-        "id": 0,
+      
         "value": "WFS_1101",
         "label": "WFS_1101"
     },
     {
-        "id": 1,
+     
         "value": "WFS_1102",
         "label": "WFS_1102"
     },
     {
-        "id": 2,
+      
         "value": "WFS_1103",
         "label": "WFS_1103"
     },
     {
-        "id": 3,
+       
         "value": "WFS_1104",
         "label": "WFS_1104"
     },
     {
-        "id": 4,
+        
         "value": "WFS_1105",
         "label": "WFS_1105"
     },
     {
-        "id": 5,
+       
         "value": "WFS_1106",
         "label": "WFS_1106"
     }
