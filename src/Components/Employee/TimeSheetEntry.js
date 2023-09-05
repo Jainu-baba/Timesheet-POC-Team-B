@@ -45,8 +45,7 @@ const TimeSheetEntry = () => {
     const [day5Total, setDay5Total] = useState(0);
     const [day6Total, setDay6Total] = useState(0);
     const [day7Total, setDay7Total] = useState(0);
-    // dayswise column sum end
-
+    
 
     const [projectCodes, setProjectCodes] = useState([]);
     const [employeeName, setEmployeeName] = useState('');
@@ -112,21 +111,24 @@ const TimeSheetEntry = () => {
           let date = employeesData.length && Object.values(JSON.parse(employeesData[0]))[0].dateIndex;
           setselectedDate(date);
           setSelectedRange(dateRanges[date]);
-          setSelectedDates(dateRanges[date]?.dates)
+          setSelectedDates(dateRanges[date]?.dates);
+       
+          if(employeesData && employeesData.length) {
+              const selectedView = Number(localStorage.getItem('details'));
+           let timesheetData =   Object.values(Object.values(JSON.parse(employeesData[0]))[0])[0];
+          let updateTable =  timesheetData[selectedView]
+           setTimeSheetRows([updateTable]);
+           setDay1Total( parseInt(updateTable['day1']));
+           setDay2Total(parseInt(updateTable['day2']));
+           setDay3Total(parseInt(updateTable['day3']));
+           setDay4Total(parseInt(updateTable['day4']));
+           setDay5Total(parseInt(updateTable['day5']));
+           setDay6Total(parseInt(updateTable['day6']));
+           setDay7Total(parseInt(updateTable['day7']));
            };
            if(window.location.href.includes("details")) {
-            const employeesData= JSON.parse(localStorage.getItem('EmployeesData'));
-            console.log(employeesData);
-            if(employeesData && employeesData.length) {
-             let timesheetData =   Object.values(Object.values(JSON.parse(employeesData[0]))[0])[0];
-             setTimeSheetRows(timesheetData);
-             setDay1Total(timesheetData.reduce((total, row) => total + parseInt(row['day1']), 0));
-             setDay2Total(timesheetData.reduce((total, row) => total + parseInt(row['day2']), 0));
-             setDay3Total(timesheetData.reduce((total, row) => total + parseInt(row['day3']), 0));
-             setDay4Total(timesheetData.reduce((total, row) => total + parseInt(row['day4']), 0));
-             setDay5Total(timesheetData.reduce((total, row) => total + parseInt(row['day5']), 0));
-             setDay6Total(timesheetData.reduce((total, row) => total + parseInt(row['day6']), 0));
-             setDay7Total(timesheetData.reduce((total, row) => total + parseInt(row['day7']), 0));
+          
+            
             }
        
         }
@@ -141,70 +143,9 @@ const TimeSheetEntry = () => {
     }
 
     
-    // const onTextChanged = (e,type) => {
-    //     console.log('type',type);
-    //     let suggestions = [];
-    //     const value = e.target.value;
-    //     if (type === 'project') {
-    //         if (value.length > 0) {
-    //             const regex = new RegExp(`^${value}`, 'i');
-    //             suggestions = projectCodes.map(ele =>ele.code).sort().filter(v => regex.test(v));
-    //         }
-    //         setText(value)
-    //     }
-    //     if (type === 'job') {
-    //         if (value.length > 0) {
-    //             const regex = new RegExp(`^${value}`, 'i');
-    //             suggestions = jobCodes.map(ele =>ele.jobCode).sort().filter(v => regex.test(v));
-    //         }
-    //         setjobText(value)
-    //     }
-    //     setSuggestions(suggestions);
-
-    // }
-    function renderSuggestions(type, index) {
-        // const {suggestions} = ;
-        if (type === 'project') {
-            if (suggestions.length === 0) {
-                return null;
-            }
-            return (
-                <div className="srchList">
-                    <ul>
-                        {suggestions.map((item) => <li onClick={() => suggestionSelected(item, 'project')}>{item}</li>)}
-                    </ul>
-                </div>
-            );
-        }
-        if (type === 'job') {
-            if (suggestions.length === 0) {
-                return null;
-            }
-            return (
-                <div className="srchList">
-                    <ul>
-                        {suggestions.map((item) => <li onClick={() => suggestionSelected(item, 'job')}>{item}</li>)}
-                    </ul>
-                </div>
-            );
-        }
-
-    }
-    function suggestionSelected(value, type) {
-        console.log(value, type);
-        setSuggestions([]);
-        if (type === 'project') {
-            // setText(value);
-            // setProjectCodes(projectCodes.filter(ele => ele.code === value));
-            // const rows = [...timeSheetRows];
-            // rows[index][key] = value;
-        }
-        if (type === 'job') {
-            setjobText(value);
-            setJobCodes(jobCodes.filter(ele => ele.jobCode === value));
-        }
-    }
-
+    
+    
+   
     const handleDropdownChange = (event) => {
         const selectedIndex = event.target.value;
         setSelectedRange(dateRanges[selectedIndex]);
@@ -246,25 +187,7 @@ const TimeSheetEntry = () => {
         setTimeSheetRows([...rows]);
     };
 
-    // function appendLi()
-    // {
-    //   var ul = document.getElementById("lang");
-    //   var li = document.createElement("li");
-    //   var text = document.createTextNode("PHP");    
-    //   li.appendChild(text);
-    //   ul.appendChild(li);
-    // }
-    const onEmployeeChanged = (e) => {
-        let suggestions = [];
-        const value = e.target.value;
-        if (value.length > 0) {
-            const regex = new RegExp(`^${value}`, 'i');
-            suggestions = employees.sort().filter(v => regex.test(v));
-        }
-        console.log('suggestions:', suggestions);
-        setEmployee(value);
-        setSuggestions(suggestions);
-    }
+    
     const suggestionSelectedVal = (key, index, value, type) => {
         const rows = [...timeSheetRows];
         rows[index][key] = value;
@@ -287,7 +210,7 @@ timeSheetRows.map((obj, index) => {
 } 
 
 );
-console.log(timeSheetRows);
+
     }
     const changeTimeSheetData = async(key, index, value) => {
         console.log('key:', key, 'index:', index, 'value:', value);
@@ -345,7 +268,7 @@ console.log(timeSheetRows);
         console.log(jobData);
         const jobs = jobData.filter((job) => job.projectCode === projectCode);
         setJobCodes(jobs);
-        // getAutoSuggestions('job',projectCode)
+        
     }
 
     const submitData = () => {
@@ -375,7 +298,7 @@ console.log(timeSheetRows);
             </Snackbar>
             <Snackbar anchorOrigin={{ vertical, horizontal }} open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-         Submitted timesheet
+         Timesheet Submitted Successfully
         </Alert>
       </Snackbar>
             <div class="container mt-4">
@@ -388,18 +311,7 @@ console.log(timeSheetRows);
                         <option>Rakesh</option>
                         <option>Jainu</option>
                     </select> 
-                    {/* <div className='col-md-4'>                       
-                        <div className="container">
-                            <div className="row justify-content-md-center">
-                                <div className="col-md-12 input">
-                                    <input value={employee} onChange={onEmployeeChanged} type="text" placeHolder="Employee Name" class="form-control" />
-                                </div>
-                                <div className="col-md-12 justify-content-md-center">
-                                    {renderSuggestions('employee')}
-                                </div>
-                            </div>
-                        </div>
-                    </div> */}
+                  
                     <div className='col-md-7'>
                         <select className={role !== 'manager' ? 'employee-name' : 'employee-name disabled' }  value={selectedDate} onChange={handleDropdownChange}>
                             {dateRanges.map((range, index) => (
@@ -421,11 +333,11 @@ console.log(timeSheetRows);
                         <tr className='bg-primary'>
                             <th className='col-md-3'>ProjectCode</th>
                             <th className='col-md-3'>JobCode</th>
-                            {selectedDates && selectedDates.length > 0 && selectedDates.map((date) => {
-                                return <th>{date ?? ''}</th>
+                            {selectedDates && selectedDates.length > 0 && selectedDates.map((date, index) => {
+                                return <th key={index}>{date ?? ''}</th>
                             })}
-                            <th>Delete</th>
-                            <th>Total</th>
+                            {role !== 'manager' && <th className='col-md-1'>Delete</th>}
+                            <th className='col-md-2' Style={'width:12px;'}>Total</th>
                         </tr>
                     </thead>
                     <tbody id="table-body">
@@ -449,20 +361,7 @@ console.log(timeSheetRows);
                             } 
                                                 </div>
                                                
-                                                <div className="col-md-12 justify-content-md-center" id={`auto_suggestion_${index}`}>
-                                                    {/* {renderSuggestions('project',index)} */}
-                                                    <div className="srchList" id={`auto_suggestion_${index}_srchList`}>
-                                                        <ul>
-                                                            {/* {suggestions?.map(project_code => (
-                                                <li onClick={(e)=>{
-                                                   return row.projectCode=e.target.value
-                                                }  }
-                                                className={`listItem- ${project_code}`}>{project_code}</li>) )
-                                                }                  */}
-                                                        </ul>
-                                                    </div>
-
-                                                </div>
+                                             
                                             </div>
                         
                                         </div>
@@ -482,29 +381,27 @@ console.log(timeSheetRows);
                                                    onChange={(e) => handleProjectCode("jobCode",index, e)}
                                                    />
                                             }
-                                                    {/* <input value={row.jobCode} onChange={(e) => { changeTimeSheetData('projectCode', index, e.target.value) }} type="text" placeHolder="Search" class="form-control" /> */}
+                                                 
                                                 </div>
-                                                <div className="col-md-12 justify-content-md-center">
-                                                    {/* {renderSuggestions('job')} */}
-                                                </div>
+                                               
                                             </div>
                                         </div>
                                     </td>
-                                    <td ><input type="text" class="form-control text-center" value={row.day1} onChange={(event) => changeTimeSheetData('day1', index, Math.min(event.target.value, 16))} /></td>
-                                    <td><input type="text" class="form-control text-center" value={row.day2} onChange={(event) => changeTimeSheetData('day2', index, Math.min(event.target.value, 16))} /></td>
+                                    <td><input type="text" class="form-control text-center" value={row.day1} onChange={(event) => changeTimeSheetData('day1', index, Math.min(event.target.value, 16))} /></td>
+                                    <td ><input type="text" class="form-control text-center" value={row.day2} onChange={(event) => changeTimeSheetData('day2', index, Math.min(event.target.value, 16))} /></td>
                                     <td><input type="text" class="form-control text-center" value={row.day3} onChange={(event) => changeTimeSheetData('day3', index, Math.min(event.target.value, 16))} /></td>
                                     <td ><input type="text" class="form-control text-center" value={row.day4} onChange={(event) => changeTimeSheetData('day4', index, Math.min(event.target.value, 16))} /></td>
                                     <td><input type="text" class="form-control text-center" value={row.day5} onChange={(event) => changeTimeSheetData('day5', index, Math.min(event.target.value, 16))} /></td>
+                                    <td ><input type="text" class="form-control text-center" value={row.day6} onChange={(event) => changeTimeSheetData('day6', index, Math.min(event.target.value, 16))} /></td>
                                     <td><input type="text" class="form-control text-center" value={row.day6} onChange={(event) => changeTimeSheetData('day6', index, Math.min(event.target.value, 16))} /></td>
-                                    <td><input type="text" class="form-control text-center" value={row.day7} onChange={(event) => changeTimeSheetData('day7', index, Math.min(event.target.value, 16))} /></td>
-                                    {/* <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day7} onChange={(event) => changeTimeSheetData('day7', index, Math.min(event.target.value, 16))} /></td> */}
-
+                                 
+                                    {role !== 'manager' &&
                                     <td>
-                                    {role !== 'manager' &&<button class="btn" onClick={() => { deleteTableRow(index) }}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                    <button class="btn" onClick={() => { deleteTableRow(index) }}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
                                                 <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
-                                            </svg></button>}</td>
+                                            </svg></button></td>}
                                    
                                     <td>{row.total}</td>
 
@@ -520,15 +417,15 @@ console.log(timeSheetRows);
                             <td className='col-md-1 text-center'><p>{day4Total}</p></td>
                             <td className='col-md-1 text-center'><p>{day5Total}</p></td>
                             <td className='col-md-1 text-center'><p>{day6Total}</p></td>
-                            <td className='col-md-1 text-center'><p>{day7Total}</p></td>
-                            <td className='col-md-1 text-center'></td>
-                            <td className='col-md-1 text-center'><p>{day1Total + day2Total + day3Total + day4Total + day5Total + day6Total + day7Total}</p></td>
+                            <td className='col-md-1 text-center'>{day7Total}</td>
+                            {role !== 'manager' && <td className='col-md-1'></td>}
+                            <td className='col-md-1'><p>{day1Total + day2Total + day3Total + day4Total + day5Total + day6Total + day7Total}</p></td>
                             
                         </tr>
                         <td> {role == 'manager' && <input type="text" value={comments} onChange={(e)=>setComments(e.target.value)} placeholder='comments' style={{marginTop:'20px',width:'400%',height:'50px',border:'1px solid #D6EAF8'}}/>}</td>
                     </tbody>
                 </table>
-                {/* {role !== 'manager' && <button class="btn btn-primary" id="add-row" onClick={addTableRow}>Add Row</button>} */}
+              
             </div>
         </>
 

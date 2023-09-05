@@ -59,11 +59,7 @@ export default function TimeSheet() {
         if(!window.location.href.includes("details")) {
             localStorage.setItem('EmployeesData', JSON.stringify([]));
         }
-        
-        // if (dateRanges && dateRanges.length > 0) {
-        //     setSelectedRange(dateRanges[0]);
-        //     setSelectedDates(dateRanges[0]?.dates)
-        // };
+     
         if (window.location.href.includes("details")) {        
          const employeesData= JSON.parse(localStorage.getItem('EmployeesData'));
          const pathname = window.location.pathname;

@@ -218,3 +218,11 @@
     background-color: #F2F3F4;
     
 }
+  .noData {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    position: absolute;
+    top: 30%;
+    left: 45%;
+  }
