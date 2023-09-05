@@ -24,10 +24,10 @@
     width: 100%;
     height: auto;
   }
-  .container .btn {
+  .container .homebtn {
     position: absolute;
     top: 50%;
-    left: 80%;
+    left: 90%;
     transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
      /* background-color: #555;
@@ -38,9 +38,12 @@
     cursor: pointer;
     border-radius: 5px; */
     text-align: center; 
-    display:flex;
+    display: inline-block;
     gap:10px;
-    float:right;
+    
+  }
+  .homebtn .empbtn {
+    padding: 10px
   }
   
   

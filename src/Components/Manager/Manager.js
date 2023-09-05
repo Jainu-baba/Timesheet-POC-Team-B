@@ -119,6 +119,19 @@ let unique2 = arr2.filter((o) => arr1.indexOf(o) === -1);
 
 const unique = unique1.concat(unique2);
 let finalData = rowsData.filter((o) => unique.includes(o.id));
+
+const empName = localStorage.getItem('employeeName');
+console.log(empName);
+const dateRange = localStorage.getItem('dateRange');
+const dateIndex = localStorage.getItem('selectedDateRangeIndex');
+if (empName && dateRange) {
+  const empData = { [empName]: { [dateRange]: finalData, dateIndex: dateIndex } };
+  let olditems = [];
+  olditems.push(JSON.stringify(empData));
+
+  localStorage.setItem('EmployeesData', [...olditems])
+
+}
 setrowsData(finalData);
   
 
@@ -133,6 +146,19 @@ let unique2 = arr2.filter((o) => arr1.indexOf(o) === -1);
 
 const unique = unique1.concat(unique2);
 let finalData = rowsData.filter((o) => unique.includes(o.id));
+const empName = localStorage.getItem('employeeName');
+console.log(empName);
+const dateRange = localStorage.getItem('dateRange');
+const dateIndex = localStorage.getItem('selectedDateRangeIndex');
+if (empName && dateRange) {
+  const empData = { [empName]: { [dateRange]: finalData, dateIndex: dateIndex } };
+  let olditems = [];
+  olditems.push(JSON.stringify(empData));
+
+  localStorage.setItem('EmployeesData', [...olditems])
+ // localStorage.setItem('EmployeesData', [JSON.stringify(empData)])
+
+}
 setrowsData(finalData);
   
 
@@ -151,6 +177,20 @@ setrowsData(finalData);
       let removeItem = localStorage.getItem("details");
 
     let sorted =   rowsArray.filter((e, i) => e.id !== Number(removeItem));
+
+     const empName = localStorage.getItem('employeeName');
+        console.log(empName);
+        const dateRange = localStorage.getItem('dateRange');
+        const dateIndex = localStorage.getItem('selectedDateRangeIndex');
+        if (empName && dateRange) {
+          const empData = { [empName]: { [dateRange]: sorted, dateIndex: dateIndex } };
+          let oldArray = [];
+          oldArray.push(empData);
+    
+          localStorage.setItem('EmployeesData', [...oldArray])
+
+        }
+
       setrowsData([...sorted]); 
      } else {
       setrowsData([...rowsArray]);

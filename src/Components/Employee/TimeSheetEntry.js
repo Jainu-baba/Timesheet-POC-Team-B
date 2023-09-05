@@ -64,9 +64,6 @@ const TimeSheetEntry = () => {
         localStorage.setItem("approved", true);
         settoastOpen(true);
         setTimeout(() => naviagate("/manager"), 1000);
-       
-
-
     }
     const BacktoManagerRejected = () => {
         setrejectoast(true);
@@ -422,9 +419,10 @@ timeSheetRows.map((obj, index) => {
                             <td className='col-md-1'><p>{day1Total + day2Total + day3Total + day4Total + day5Total + day6Total + day7Total}</p></td>
                             
                         </tr>
-                        <td> {role == 'manager' && <input type="text" value={comments} onChange={(e)=>setComments(e.target.value)} placeholder='comments' style={{marginTop:'20px',width:'400%',height:'50px',border:'1px solid #D6EAF8'}}/>}</td>
+                       
                     </tbody>
                 </table>
+                <td> {role == 'manager' && <input type="text" value={comments} onChange={(e)=>setComments(e.target.value)} placeholder='comments' style={{marginTop:'20px',width:'400%',height:'50px',border:'1px solid #D6EAF8'}}/>}</td>
               
             </div>
         </>
