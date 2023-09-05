@@ -272,11 +272,21 @@ timeSheetRows.map((obj, index) => {
     }
 
     const submitData = () => {
+        const empName = localStorage.getItem('employeeName');
+        console.log(empName);
+        const dateRange = localStorage.getItem('dateRange');
+        const dateIndex = localStorage.getItem('selectedDateRangeIndex');
+        if (empName && dateRange) {
+          const empData = { [empName]: { [dateRange]: timeSheetRows, dateIndex: dateIndex } };
+    
+          localStorage.setItem("empData", JSON.stringify(empData))
+    
+        }
 
-        const empData = localStorage.getItem("empData");
-        console.log(JSON.parse(empData));
+        const NewempData = localStorage.getItem("empData");
+        console.log(JSON.parse(NewempData));
         let oldData = localStorage.getItem('EmployeesData') ? JSON.parse(localStorage.getItem('EmployeesData')) : [];
-        oldData.push(empData);
+        oldData.push(NewempData);
         localStorage.setItem('EmployeesData', JSON.stringify(oldData));
        handleClickOpen();
         setTimeout(() => {
