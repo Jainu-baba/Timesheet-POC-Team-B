@@ -10,7 +10,7 @@ const Home = () => {
     <div>
        <div className="container" > 
       <img src={image} alt="Snow"/>
-      <div className="btn">
+      <div className="homebtn">
         <Button variant="contained" color="success" size="large" onClick={() => navigate("/employee")} >Employee</Button>
         <Button variant="contained" color='success' size="large" onClick={() => navigate("/manager")}>Manager</Button>
       </div>
