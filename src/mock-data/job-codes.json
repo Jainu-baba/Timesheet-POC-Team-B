@@ -29,26 +29,10 @@
 
         
     },
+   
+    
     {
-        "id": 3,
-        "projectCode": "WFS_1101",
-        "jobCode": "Dev-UnitTesting",
-        "value": "Dev-UnitTesting",
-        "label": "Dev-UnitTesting"
-
-        
-    },
-    {
-        "id": 3,
-        "projectCode": "WFS_1101",
-        "jobCode": "Dev-UnitTesting",
-        "value": "Dev-UnitTesting",
-        "label": "Dev-UnitTesting"
-
-        
-    },
-    {
-        "id": 3,
+        "id": 4,
         "projectCode": "WFS_1101",
         "jobCode": "RequirementGathering",
         "value": "RequirementGathering",
@@ -57,7 +41,7 @@
         
     },
     {
-        "id": 3,
+        "id": 5,
         "projectCode": "WFS_1101",
         "jobCode": "RequirementAnalysis",
         "value": "RequirementAnalysis",
@@ -66,7 +50,7 @@
         
     },
     {
-        "id": 3,
+        "id": 6,
         "projectCode": "WFS_1101",
         "jobCode": "TestCase-Writing",
         "value": "TestCase-Writing",
@@ -75,7 +59,7 @@
         
     },
     {
-        "id": 3,
+        "id": 7,
         "projectCode": "WFS_1101",
         "jobCode": "TestCase-Execution",
         "value": "TestCase-Execution",
@@ -84,7 +68,7 @@
         
     },
     {
-        "id": 3,
+        "id": 8,
         "projectCode": "WFS_1101",
         "jobCode": "TestCase-Automation",
         "value": "TestCase-Automation",
