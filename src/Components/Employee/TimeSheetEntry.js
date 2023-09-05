@@ -44,8 +44,7 @@ const TimeSheetEntry = () => {
     const [day5Total, setDay5Total] = useState(0);
     const [day6Total, setDay6Total] = useState(0);
     const [day7Total, setDay7Total] = useState(0);
-    // dayswise column sum end
-
+    
 
     const [projectCodes, setProjectCodes] = useState([]);
     const [employeeName, setEmployeeName] = useState('');
@@ -112,9 +111,7 @@ const TimeSheetEntry = () => {
           setselectedDate(date);
           setSelectedRange(dateRanges[date]);
           setSelectedDates(dateRanges[date]?.dates);
-         // const employeesData= JSON.parse(localStorage.getItem('EmployeesData'));
-           
-          console.log(employeesData);
+       
           if(employeesData && employeesData.length) {
               const selectedView = Number(localStorage.getItem('details'));
            let timesheetData =   Object.values(Object.values(JSON.parse(employeesData[0]))[0])[0];
@@ -145,70 +142,9 @@ const TimeSheetEntry = () => {
     }
 
     
-    // const onTextChanged = (e,type) => {
-    //     console.log('type',type);
-    //     let suggestions = [];
-    //     const value = e.target.value;
-    //     if (type === 'project') {
-    //         if (value.length > 0) {
-    //             const regex = new RegExp(`^${value}`, 'i');
-    //             suggestions = projectCodes.map(ele =>ele.code).sort().filter(v => regex.test(v));
-    //         }
-    //         setText(value)
-    //     }
-    //     if (type === 'job') {
-    //         if (value.length > 0) {
-    //             const regex = new RegExp(`^${value}`, 'i');
-    //             suggestions = jobCodes.map(ele =>ele.jobCode).sort().filter(v => regex.test(v));
-    //         }
-    //         setjobText(value)
-    //     }
-    //     setSuggestions(suggestions);
-
-    // }
-    function renderSuggestions(type, index) {
-        // const {suggestions} = ;
-        if (type === 'project') {
-            if (suggestions.length === 0) {
-                return null;
-            }
-            return (
-                <div className="srchList">
-                    <ul>
-                        {suggestions.map((item) => <li onClick={() => suggestionSelected(item, 'project')}>{item}</li>)}
-                    </ul>
-                </div>
-            );
-        }
-        if (type === 'job') {
-            if (suggestions.length === 0) {
-                return null;
-            }
-            return (
-                <div className="srchList">
-                    <ul>
-                        {suggestions.map((item) => <li onClick={() => suggestionSelected(item, 'job')}>{item}</li>)}
-                    </ul>
-                </div>
-            );
-        }
-
-    }
-    function suggestionSelected(value, type) {
-        console.log(value, type);
-        setSuggestions([]);
-        if (type === 'project') {
-            // setText(value);
-            // setProjectCodes(projectCodes.filter(ele => ele.code === value));
-            // const rows = [...timeSheetRows];
-            // rows[index][key] = value;
-        }
-        if (type === 'job') {
-            setjobText(value);
-            setJobCodes(jobCodes.filter(ele => ele.jobCode === value));
-        }
-    }
-
+    
+    
+   
     const handleDropdownChange = (event) => {
         const selectedIndex = event.target.value;
         setSelectedRange(dateRanges[selectedIndex]);
@@ -250,25 +186,7 @@ const TimeSheetEntry = () => {
         setTimeSheetRows([...rows]);
     };
 
-    // function appendLi()
-    // {
-    //   var ul = document.getElementById("lang");
-    //   var li = document.createElement("li");
-    //   var text = document.createTextNode("PHP");    
-    //   li.appendChild(text);
-    //   ul.appendChild(li);
-    // }
-    const onEmployeeChanged = (e) => {
-        let suggestions = [];
-        const value = e.target.value;
-        if (value.length > 0) {
-            const regex = new RegExp(`^${value}`, 'i');
-            suggestions = employees.sort().filter(v => regex.test(v));
-        }
-        console.log('suggestions:', suggestions);
-        setEmployee(value);
-        setSuggestions(suggestions);
-    }
+    
     const suggestionSelectedVal = (key, index, value, type) => {
         const rows = [...timeSheetRows];
         rows[index][key] = value;
@@ -291,7 +209,7 @@ timeSheetRows.map((obj, index) => {
 } 
 
 );
-console.log(timeSheetRows);
+
     }
     const changeTimeSheetData = async(key, index, value) => {
         console.log('key:', key, 'index:', index, 'value:', value);
@@ -349,7 +267,7 @@ console.log(timeSheetRows);
         console.log(jobData);
         const jobs = jobData.filter((job) => job.projectCode === projectCode);
         setJobCodes(jobs);
-        // getAutoSuggestions('job',projectCode)
+        
     }
 
     const submitData = () => {
@@ -379,7 +297,7 @@ console.log(timeSheetRows);
             </Snackbar>
             <Snackbar anchorOrigin={{ vertical, horizontal }} open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-         Submitted timesheet
+         Timesheet Submitted Successfully
         </Alert>
       </Snackbar>
             <div class="container mt-4">
@@ -392,18 +310,7 @@ console.log(timeSheetRows);
                         <option>Rakesh</option>
                         <option>Jainu</option>
                     </select> 
-                    {/* <div className='col-md-4'>                       
-                        <div className="container">
-                            <div className="row justify-content-md-center">
-                                <div className="col-md-12 input">
-                                    <input value={employee} onChange={onEmployeeChanged} type="text" placeHolder="Employee Name" class="form-control" />
-                                </div>
-                                <div className="col-md-12 justify-content-md-center">
-                                    {renderSuggestions('employee')}
-                                </div>
-                            </div>
-                        </div>
-                    </div> */}
+                  
                     <div className='col-md-7'>
                         <select className='employee-name' value={selectedDate} onChange={handleDropdownChange}>
                             {dateRanges.map((range, index) => (
@@ -453,20 +360,7 @@ console.log(timeSheetRows);
                             } 
                                                 </div>
                                                
-                                                <div className="col-md-12 justify-content-md-center" id={`auto_suggestion_${index}`}>
-                                                    {/* {renderSuggestions('project',index)} */}
-                                                    <div className="srchList" id={`auto_suggestion_${index}_srchList`}>
-                                                        <ul>
-                                                            {/* {suggestions?.map(project_code => (
-                                                <li onClick={(e)=>{
-                                                   return row.projectCode=e.target.value
-                                                }  }
-                                                className={`listItem- ${project_code}`}>{project_code}</li>) )
-                                                }                  */}
-                                                        </ul>
-                                                    </div>
-
-                                                </div>
+                                             
                                             </div>
                         
                                         </div>
@@ -486,11 +380,9 @@ console.log(timeSheetRows);
                                                    onChange={(e) => handleProjectCode("jobCode",index, e)}
                                                    />
                                             }
-                                                    {/* <input value={row.jobCode} onChange={(e) => { changeTimeSheetData('projectCode', index, e.target.value) }} type="text" placeHolder="Search" class="form-control" /> */}
+                                                 
                                                 </div>
-                                                <div className="col-md-12 justify-content-md-center">
-                                                    {/* {renderSuggestions('job')} */}
-                                                </div>
+                                               
                                             </div>
                                         </div>
                                     </td>
@@ -501,7 +393,7 @@ console.log(timeSheetRows);
                                     <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day5} onChange={(event) => changeTimeSheetData('day5', index, Math.min(event.target.value, 16))} /></td>
                                     <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day6} onChange={(event) => changeTimeSheetData('day6', index, Math.min(event.target.value, 16))} /></td>
                                     <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day6} onChange={(event) => changeTimeSheetData('day6', index, Math.min(event.target.value, 16))} /></td>
-                                    {/* <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day7} onChange={(event) => changeTimeSheetData('day7', index, Math.min(event.target.value, 16))} /></td> */}
+                                 
                                     {role !== 'manager' &&
                                     <td>
                                     <button class="btn" onClick={() => { deleteTableRow(index) }}>
@@ -532,7 +424,7 @@ console.log(timeSheetRows);
                         <td> {role == 'manager' && <input type="text" value={comments} onChange={(e)=>setComments(e.target.value)} placeholder='comments' style={{marginTop:'20px',width:'400%',height:'50px',border:'1px solid #D6EAF8'}}/>}</td>
                     </tbody>
                 </table>
-                {/* {role !== 'manager' && <button class="btn btn-primary" id="add-row" onClick={addTableRow}>Add Row</button>} */}
+              
             </div>
         </>
 

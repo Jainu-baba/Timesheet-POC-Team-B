@@ -210,3 +210,11 @@
    table{
     border-spacing:0 ;
   }
+  .noData {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    position: absolute;
+    top: 30%;
+    left: 45%;
+  }

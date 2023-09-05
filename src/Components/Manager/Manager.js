@@ -5,12 +5,10 @@ import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
-import { DataGrid } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import { useState, useEffect } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 
-import DateRange from './DateRange.json';
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -113,22 +111,7 @@ const Manager = () => {
     setrejectoast(false);
   };
   const apply = () => {
-    // var newRows = [];
-    // settoastOpen(true);
-    // rowsData.forEach((row, i) => {
-    //   selectedRows.forEach((e, id) => {
-
-    //     if(e.id !== row.id) {
-    //       newRows.push(e);
-    //     }
-       
-    //   }
-    //    )
-    // } 
-    
-    // );
-    // setrowsData(newRows);
-   // rowsData = newRows
+   
        const arr1 = rowsData.map(e => e.id);  
 const arr2 = selectedRows.map(e => e.id);  
 let unique1 = arr1.filter((o) => arr2.indexOf(o) === -1);
@@ -137,26 +120,12 @@ let unique2 = arr2.filter((o) => arr1.indexOf(o) === -1);
 const unique = unique1.concat(unique2);
 let finalData = rowsData.filter((o) => unique.includes(o.id));
 setrowsData(finalData);
-   // rowsData = Rows
+  
 
   }
 
   const reject = () => {
-    // var Rows = [];
-    // setrejectoast(true);
-    // rowsData.forEach((row, i) => {
-    //   selectedRows.forEach((e, id) => {
-
-    //     if(e.id !== row.id) {
-    //       Rows.push(e);
-    //     }
-       
-    //   }
-    //    )
-    // } 
     
-    // );
-    // setrowsData(Rows);
     const arr1 = rowsData.map(e => e.id);  
 const arr2 = selectedRows.map(e => e.id);  
 let unique1 = arr1.filter((o) => arr2.indexOf(o) === -1);
@@ -165,7 +134,7 @@ let unique2 = arr2.filter((o) => arr1.indexOf(o) === -1);
 const unique = unique1.concat(unique2);
 let finalData = rowsData.filter((o) => unique.includes(o.id));
 setrowsData(finalData);
-    //rowsData = Rows
+  
 
   }
   var vertical = "top";
@@ -173,7 +142,7 @@ setrowsData(finalData);
   useEffect(() => {
    
     const data = JSON.parse(localStorage.getItem('EmployeesData'));
-    data.forEach((e, i )=> {
+   data && data.forEach((e, i )=> {
       let strinfy = JSON.parse(e);    
       setselectedDates(Object.keys(Object.values(strinfy)[0])[0]);  
       let arrayData = Object.values(Object.values(strinfy)[0]);
@@ -182,9 +151,9 @@ setrowsData(finalData);
       let removeItem = localStorage.getItem("details");
 
     let sorted =   rowsArray.filter((e, i) => e.id !== Number(removeItem));
-      setrowsData(sorted); 
+      setrowsData([...sorted]); 
      } else {
-      setrowsData(rowsArray);
+      setrowsData([...rowsArray]);
      }
           
     })  
@@ -265,9 +234,7 @@ const checkItems = async(event, row, index) => {
                             <div className="col-md-12 input">
                             {row.jobCode}
                             </div>
-                            <div className="col-md-12 justify-content-md-center">
-                                {/* {renderSuggestions('job')} */}
-                            </div>
+                            
                         </div>
                     </div>
                 </td>
@@ -277,9 +244,7 @@ const checkItems = async(event, row, index) => {
                             <div className="col-md-12 input">
                           {row.empName}
                             </div>
-                            <div className="col-md-12 justify-content-md-center">
-                                {/* {renderSuggestions('job')} */}
-                            </div>
+                           
                         </div>
                     </div>
                 </td>
@@ -291,9 +256,7 @@ const checkItems = async(event, row, index) => {
                             <div className="col-md-12 input">
                             <Button onClick={(e) => detailView(row)}><RemoveRedEyeIcon /></Button>
                             </div>
-                            <div className="col-md-12 justify-content-md-center">
-                                {/* {renderSuggestions('job')} */}
-                            </div>
+                           
                         </div>
                     </div>
                 </td>
@@ -304,9 +267,7 @@ const checkItems = async(event, row, index) => {
                             <div className="col-md-12 input">
                             <input type="text" style={{width: "100%"}} onChange={(e, i) => trigger(row, e)} />
                             </div>
-                            <div className="col-md-12 justify-content-md-center">
-                                {/* {renderSuggestions('job')} */}
-                            </div>
+                        
                         </div>
                     </div>
                 </td>
@@ -315,39 +276,12 @@ const checkItems = async(event, row, index) => {
             </tr>
         )
     })
-  : "No Data"}
+  : <p className="noData">No Data</p>}
    
     
 </tbody>
 </table>
 
-          {/* <DataGrid
-            checkboxSelection
-            rows={rowsData}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 5,
-                },
-              },
-            }}
-
-            onRowSelectionModelChange={(ids) => {
-              //const newIds = ids.map(e => e +1);
-              const selectedIDs = new Set(ids);
-              const selectedRows = rowsData.filter((row) =>
-                selectedIDs.has(row.id),
-              );
-
-              setSelectedRows(selectedRows);
-              setdisableButtons(((selectedRows.length > 0) ? false : true));
-            }}
-            pageSizeOptions={[5]}
-
-            disableRowSelectionOnClick
-          />
-          */}
 
         </Box>
       </div>
