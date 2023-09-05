@@ -8,13 +8,6 @@
     },
     {
         "id": 1,
-        "projectCode": "WFS_1101",
-        "jobCode":"Dev-Implementation",
-        "value": "Dev-Implementation",
-        "label": "Dev-Implementation"
-    },
-    {
-        "id": 2,
         "projectCode": "WFS_1102",
         "jobCode": "Dev-CodeReview",
         "value": "Dev-CodeReview",
@@ -29,6 +22,24 @@
 
         
     },
+    {
+        "id": 6,
+        "projectCode": "WFS_1101",
+        "jobCode": "TestCase-Writing",
+        "value": "TestCase-Writing",
+        "label": "TestCase-Writing"
+
+        
+    },
+    {
+        "id": 2,
+        "projectCode": "WFS_1101",
+        "jobCode":"Dev-Implementation",
+        "value": "Dev-Implementation",
+        "label": "Dev-Implementation"
+    },
+   
+    
    
     
     {
@@ -49,15 +60,7 @@
 
         
     },
-    {
-        "id": 6,
-        "projectCode": "WFS_1101",
-        "jobCode": "TestCase-Writing",
-        "value": "TestCase-Writing",
-        "label": "TestCase-Writing"
-
-        
-    },
+    
     {
         "id": 7,
         "projectCode": "WFS_1101",
