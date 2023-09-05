@@ -11,8 +11,14 @@ const Home = () => {
        <div className="container" > 
       <img src={image} alt="Snow"/>
       <div className="homebtn">
+        <div className="empbtn">
         <Button variant="contained" color="success" size="large" onClick={() => navigate("/employee")} >Employee</Button>
+        </div>
+        <div className="empbtn">
         <Button variant="contained" color='success' size="large" onClick={() => navigate("/manager")}>Manager</Button>
+        </div>
+        
+        
       </div>
       </div> 
     </div>
