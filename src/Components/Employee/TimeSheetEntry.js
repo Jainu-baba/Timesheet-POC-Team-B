@@ -64,9 +64,6 @@ const TimeSheetEntry = () => {
         localStorage.setItem("approved", true);
         settoastOpen(true);
         setTimeout(() => naviagate("/manager"), 1000);
-       
-
-
     }
     const BacktoManagerRejected = () => {
         setrejectoast(true);
