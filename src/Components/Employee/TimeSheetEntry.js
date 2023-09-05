@@ -272,21 +272,11 @@ timeSheetRows.map((obj, index) => {
     }
 
     const submitData = () => {
-        const empName = localStorage.getItem('employeeName');
-        console.log(empName);
-        const dateRange = localStorage.getItem('dateRange');
-        const dateIndex = localStorage.getItem('selectedDateRangeIndex');
-        if (empName && dateRange) {
-          const empData = { [empName]: { [dateRange]: timeSheetRows, dateIndex: dateIndex } };
-    
-          localStorage.setItem("empData", JSON.stringify(empData))
-    
-        }
 
-        const NewempData = localStorage.getItem("empData");
-        console.log(JSON.parse(NewempData));
+        const empData = localStorage.getItem("empData");
+        console.log(JSON.parse(empData));
         let oldData = localStorage.getItem('EmployeesData') ? JSON.parse(localStorage.getItem('EmployeesData')) : [];
-        oldData.push(NewempData);
+        oldData.push(empData);
         localStorage.setItem('EmployeesData', JSON.stringify(oldData));
        handleClickOpen();
         setTimeout(() => {
@@ -397,13 +387,13 @@ timeSheetRows.map((obj, index) => {
                                             </div>
                                         </div>
                                     </td>
-                                    <td><input type="text" class="form-control text-center" value={row.day1} onChange={(event) => changeTimeSheetData('day1', index, Math.min(event.target.value, 16))} /></td>
-                                    <td ><input type="text" class="form-control text-center" value={row.day2} onChange={(event) => changeTimeSheetData('day2', index, Math.min(event.target.value, 16))} /></td>
-                                    <td><input type="text" class="form-control text-center" value={row.day3} onChange={(event) => changeTimeSheetData('day3', index, Math.min(event.target.value, 16))} /></td>
-                                    <td ><input type="text" class="form-control text-center" value={row.day4} onChange={(event) => changeTimeSheetData('day4', index, Math.min(event.target.value, 16))} /></td>
-                                    <td><input type="text" class="form-control text-center" value={row.day5} onChange={(event) => changeTimeSheetData('day5', index, Math.min(event.target.value, 16))} /></td>
-                                    <td ><input type="text" class="form-control text-center" value={row.day6} onChange={(event) => changeTimeSheetData('day6', index, Math.min(event.target.value, 16))} /></td>
-                                    <td><input type="text" class="form-control text-center" value={row.day6} onChange={(event) => changeTimeSheetData('day6', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day1} onChange={(event) => changeTimeSheetData('day1', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day2} onChange={(event) => changeTimeSheetData('day2', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day3} onChange={(event) => changeTimeSheetData('day3', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day4} onChange={(event) => changeTimeSheetData('day4', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day5} onChange={(event) => changeTimeSheetData('day5', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day6} onChange={(event) => changeTimeSheetData('day6', index, Math.min(event.target.value, 16))} /></td>
+                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day6} onChange={(event) => changeTimeSheetData('day6', index, Math.min(event.target.value, 16))} /></td>
                                  
                                     {role !== 'manager' &&
                                     <td>
@@ -419,7 +409,7 @@ timeSheetRows.map((obj, index) => {
                             )
                         })}
                         <tr>
-                            <td className='col-md-2'>{role !== 'manager' && <button class="btn btn-secondary" id="add-row" onClick={addTableRow} style={{height:'40px',width:'150px'}}>Add Row</button>}</td>
+                             <td className='col-md-2'>{role !== 'manager' && <button class="btn btn-secondary" id="add-row" onClick={addTableRow} style={{height:'40px',width:'150px'}}>Add Row</button>}</td> 
                             <td className='col-md-2'></td>
                             <td className='col-md-1 text-center'><p>{day1Total}</p></td>
                             <td className='col-md-1 text-center'><p>{day2Total}</p></td>
