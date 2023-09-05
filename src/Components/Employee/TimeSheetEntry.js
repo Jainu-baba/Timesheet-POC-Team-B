@@ -9,6 +9,7 @@ import projectData from "../../mock-data/project-codes.json";
 import jobData from "../../mock-data/job-codes.json";
 import Select from 'react-select';
 import MuiAlert from '@mui/material/Alert';
+import "./Table.css";
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
@@ -379,7 +380,7 @@ console.log(timeSheetRows);
       </Snackbar>
             <div class="container mt-4">
                 <div class="employee-select">
-                     <select class="employee-name"  value={employeeName} onChange={(event) => handleEmployee(event.target.value)}>
+                     <select className={role !== 'manager' ? 'employee-name' : 'employee-name disabled' }  value={employeeName} onChange={(event) => handleEmployee(event.target.value)}>
                     <option>Employee Name</option>
                         <option>Bhargavi</option>
                         <option>Karthik</option>
@@ -400,7 +401,7 @@ console.log(timeSheetRows);
                         </div>
                     </div> */}
                     <div className='col-md-7'>
-                        <select className='employee-name' value={selectedDate} onChange={handleDropdownChange}>
+                        <select className={role !== 'manager' ? 'employee-name' : 'employee-name disabled' }  value={selectedDate} onChange={handleDropdownChange}>
                             {dateRanges.map((range, index) => (
                                 <option key={index} value={index}>
                                     {range.fromDate} - {range.toDate}
@@ -418,20 +419,20 @@ console.log(timeSheetRows);
                 <table class="table table-bordered text-center" cellspacing="0">
                     <thead className='table-secondary'>
                         <tr className='bg-primary'>
-                            <th className='col-md-2'>ProjectCode</th>
-                            <th className='col-md-2'>JobCode</th>
+                            <th className='col-md-3'>ProjectCode</th>
+                            <th className='col-md-3'>JobCode</th>
                             {selectedDates && selectedDates.length > 0 && selectedDates.map((date) => {
                                 return <th>{date ?? ''}</th>
                             })}
-                            <th className='col-md-1'>Delete</th>
-                            <th className='col-md-2' Style={'width:12px;'}>Total</th>
+                            <th>Delete</th>
+                            <th>Total</th>
                         </tr>
                     </thead>
                     <tbody id="table-body">
                         {timeSheetRows && timeSheetRows.length > 0 && timeSheetRows.map((row, index) => {
                             return (
                                 <tr>
-                                    <td className='col-md-3'>
+                                    <td lassName='col-md-3'>
                                         <div className="container">
                                             <div className="row justify-content-md-center">
                                                 <div className="col-md-12 input">
@@ -467,7 +468,7 @@ console.log(timeSheetRows);
                                         </div>
 
                                     </td>
-                                    <td className='col-md-3'>
+                                    <td lassName='col-md-3'>
                                         <div className="container">
                                             <div className="row justify-content-md-center">
                                                 <div className="col-md-12 input">
@@ -489,23 +490,23 @@ console.log(timeSheetRows);
                                             </div>
                                         </div>
                                     </td>
-                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day1} onChange={(event) => changeTimeSheetData('day1', index, Math.min(event.target.value, 16))} /></td>
-                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day2} onChange={(event) => changeTimeSheetData('day2', index, Math.min(event.target.value, 16))} /></td>
-                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day3} onChange={(event) => changeTimeSheetData('day3', index, Math.min(event.target.value, 16))} /></td>
-                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day4} onChange={(event) => changeTimeSheetData('day4', index, Math.min(event.target.value, 16))} /></td>
-                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day5} onChange={(event) => changeTimeSheetData('day5', index, Math.min(event.target.value, 16))} /></td>
-                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day6} onChange={(event) => changeTimeSheetData('day6', index, Math.min(event.target.value, 16))} /></td>
-                                    <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day6} onChange={(event) => changeTimeSheetData('day6', index, Math.min(event.target.value, 16))} /></td>
+                                    <td ><input type="text" class="form-control text-center" value={row.day1} onChange={(event) => changeTimeSheetData('day1', index, Math.min(event.target.value, 16))} /></td>
+                                    <td><input type="text" class="form-control text-center" value={row.day2} onChange={(event) => changeTimeSheetData('day2', index, Math.min(event.target.value, 16))} /></td>
+                                    <td><input type="text" class="form-control text-center" value={row.day3} onChange={(event) => changeTimeSheetData('day3', index, Math.min(event.target.value, 16))} /></td>
+                                    <td ><input type="text" class="form-control text-center" value={row.day4} onChange={(event) => changeTimeSheetData('day4', index, Math.min(event.target.value, 16))} /></td>
+                                    <td><input type="text" class="form-control text-center" value={row.day5} onChange={(event) => changeTimeSheetData('day5', index, Math.min(event.target.value, 16))} /></td>
+                                    <td><input type="text" class="form-control text-center" value={row.day6} onChange={(event) => changeTimeSheetData('day6', index, Math.min(event.target.value, 16))} /></td>
+                                    <td><input type="text" class="form-control text-center" value={row.day7} onChange={(event) => changeTimeSheetData('day7', index, Math.min(event.target.value, 16))} /></td>
                                     {/* <td className='col-md-1'><input type="text" class="form-control text-center" value={row.day7} onChange={(event) => changeTimeSheetData('day7', index, Math.min(event.target.value, 16))} /></td> */}
 
                                     <td>
                                     {role !== 'manager' &&<button class="btn" onClick={() => { deleteTableRow(index) }}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
                                                 <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
                                             </svg></button>}</td>
                                    
-                                    <td className='col-md-1'>{row.total}</td>
+                                    <td>{row.total}</td>
 
                                 </tr>
                             )

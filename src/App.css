@@ -187,7 +187,7 @@
     display: flex;
     gap: 20px;
     justify-content: space-between;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   }
   .total-hrs-date{
     margin-top:30px;
@@ -210,3 +210,11 @@
    table{
     border-spacing:0 ;
   }
+
+  /* Disable the dropdown */
+.disabled{
+    pointer-events: none;
+    opacity: 1;
+    background-color: #F2F3F4;
+    
+}
