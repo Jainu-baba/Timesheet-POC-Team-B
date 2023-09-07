@@ -18,8 +18,8 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 
 var rows = [
-  { id: 1, jobCode: "Testing", empName: "jain", projectCode: 'WFS_1101',  total: 35, ViewDetails: "", Comments: "" },
- 
+  { id: 1, jobCode: "Testing", empName: "jain", projectCode: 'WFS_1101', total: 35, ViewDetails: "", Comments: "" },
+
 ];
 
 
@@ -83,8 +83,8 @@ const Manager = () => {
       renderCell: (params) => {
         return (
 
-          <input type="text" style={{width: "100%"}} onChange={(e, i) => trigger(params, e)} />
-          
+          <input type="text" style={{ width: "100%" }} onChange={(e, i) => trigger(params, e)} />
+
         );
       }
     },
@@ -111,106 +111,79 @@ const Manager = () => {
     setrejectoast(false);
   };
   const apply = () => {
-   
-       const arr1 = rowsData.map(e => e.id);  
-const arr2 = selectedRows.map(e => e.id);  
-let unique1 = arr1.filter((o) => arr2.indexOf(o) === -1);
-let unique2 = arr2.filter((o) => arr1.indexOf(o) === -1);
 
-const unique = unique1.concat(unique2);
-let finalData = rowsData.filter((o) => unique.includes(o.id));
+    const arr1 = rowsData.map(e => e.id);
+    const arr2 = selectedRows.map(e => e.id);
+    let unique1 = arr1.filter((o) => arr2.indexOf(o) === -1);
+    let unique2 = arr2.filter((o) => arr1.indexOf(o) === -1);
+    const unique = unique1.concat(unique2);
+    let finalData = rowsData.filter((o) => unique.includes(o.id));
+    createEmployeeData(finalData);
+    setrowsData(finalData);
 
-const empName = localStorage.getItem('employeeName');
-console.log(empName);
-const dateRange = localStorage.getItem('dateRange');
-const dateIndex = localStorage.getItem('selectedDateRangeIndex');
-if (empName && dateRange) {
-  const empData = { [empName]: { [dateRange]: finalData, dateIndex: dateIndex } };
-  let olditems = [];
-  olditems.push(JSON.stringify(empData));
-
-  localStorage.setItem('EmployeesData', [...olditems])
-
-}
-setrowsData(finalData);
-  
 
   }
 
   const reject = () => {
-    
-    const arr1 = rowsData.map(e => e.id);  
-const arr2 = selectedRows.map(e => e.id);  
-let unique1 = arr1.filter((o) => arr2.indexOf(o) === -1);
-let unique2 = arr2.filter((o) => arr1.indexOf(o) === -1);
+    const arr1 = rowsData.map(e => e.id);
+    const arr2 = selectedRows.map(e => e.id);
+    let unique1 = arr1.filter((o) => arr2.indexOf(o) === -1);
+    let unique2 = arr2.filter((o) => arr1.indexOf(o) === -1);
+    const unique = unique1.concat(unique2);
+    let finalData = rowsData.filter((o) => unique.includes(o.id));
+    createEmployeeData(finalData);
+    setrowsData(finalData);
 
-const unique = unique1.concat(unique2);
-let finalData = rowsData.filter((o) => unique.includes(o.id));
-const empName = localStorage.getItem('employeeName');
-console.log(empName);
-const dateRange = localStorage.getItem('dateRange');
-const dateIndex = localStorage.getItem('selectedDateRangeIndex');
-if (empName && dateRange) {
-  const empData = { [empName]: { [dateRange]: finalData, dateIndex: dateIndex } };
-  let olditems = [];
-  olditems.push(JSON.stringify(empData));
-
-  localStorage.setItem('EmployeesData', [...olditems])
- // localStorage.setItem('EmployeesData', [JSON.stringify(empData)])
-
-}
-setrowsData(finalData);
-  
 
   }
   var vertical = "top";
   var horizontal = "center";
   useEffect(() => {
-   
+
     const data = JSON.parse(localStorage.getItem('EmployeesData'));
-   data && data.forEach((e, i )=> {
-      let strinfy = JSON.parse(e);    
-      setselectedDates(Object.keys(Object.values(strinfy)[0])[0]);  
+    data && data.forEach((e, i) => {
+      let strinfy = JSON.parse(e);
+      setselectedDates(Object.keys(Object.values(strinfy)[0])[0]);
       let arrayData = Object.values(Object.values(strinfy)[0]);
-     let rowsArray = arrayData[0].map((obj, index) => {obj["id"] = index;obj["empName"] = Object.keys(strinfy)[0]; return obj} );
-     if(localStorage.getItem("approved") === "true") {
-      let removeItem = localStorage.getItem("details");
+      let rowsArray = arrayData[0].map((obj, index) => { obj["id"] = index; obj["empName"] = Object.keys(strinfy)[0]; return obj });
+      if (localStorage.getItem("approved") === "true") {
+        let removeItem = localStorage.getItem("details");
 
-    let sorted =   rowsArray.filter((e, i) => e.id !== Number(removeItem));
+        let sorted = rowsArray.filter((e, i) => e.id !== Number(removeItem));
+        createEmployeeData(sorted);
+        setrowsData([...sorted]);
+      } else {
+        setrowsData([...rowsArray]);
+      }
 
-     const empName = localStorage.getItem('employeeName');
-        console.log(empName);
-        const dateRange = localStorage.getItem('dateRange');
-        const dateIndex = localStorage.getItem('selectedDateRangeIndex');
-        if (empName && dateRange) {
-          const empData = { [empName]: { [dateRange]: sorted, dateIndex: dateIndex } };
-          let oldArray = [];
-          oldArray.push(empData);
-    
-          localStorage.setItem('EmployeesData', [...oldArray])
+    })
+  }, []);
+  const createEmployeeData = (data) => {
+    const empName = localStorage.getItem('employeeName');
+    console.log(empName);
+    const dateRange = localStorage.getItem('dateRange');
+    const dateIndex = localStorage.getItem('selectedDateRangeIndex');
+    if (empName && dateRange) {
+      const empData = { [empName]: { [dateRange]: data, dateIndex: dateIndex } };
+      let oldArray = [];
+      oldArray.push(empData);
 
-        }
+      localStorage.setItem('EmployeesData', [...oldArray])
 
-      setrowsData([...sorted]); 
-     } else {
-      setrowsData([...rowsArray]);
-     }
-          
-    })  
-}, []);
-const checkItems = async(event, row, index) => {
-  console.log(event.target.checked);
-  if(event.target.checked) {
-    let rowsList = selectedRows;
-    rowsList.push(row);
- 
-
-  setSelectedRows(rowsList);
-  setdisableButtons(((selectedRows.length > 0) ? false : true));
+    }
 
   }
+  const checkItems = async (event, row, index) => {
+    console.log(event.target.checked);
+    if (event.target.checked) {
+      let rowsList = selectedRows;
+      rowsList.push(row);
+      setSelectedRows(rowsList);
+      setdisableButtons(((selectedRows.length > 0) ? false : true));
 
-}
+    }
+
+  }
   return (
 
     <div className="overall-layout">
@@ -244,85 +217,72 @@ const checkItems = async(event, row, index) => {
       </div>
       <div>
         <Box sx={{ height: 400, width: '100%' }}>
-        <table class="table table-bordered text-center">
-<thead className='table-secondary'>
-    <tr className='bg-primary'>
-<th className='col-md-1'>   Select</th>
-        <th className='col-md-2'>ProjectCode</th>
-        <th className='col-md-2'>JobCode</th>
-       
-        <th className='col-md-2'>Emp name</th>
-        <th className='col-md-1'>Total</th>
-<th className='col-md-1' >ViewDetails</th>
-<th className='col-md-2' >Comments</th>
-    </tr>
-</thead>
-<tbody id="table-body">
-    {rowsData && rowsData.length > 0 ? rowsData.map((row, index) => {
-        return (
-            <tr>
-               <td className='col-md-1'>
-               <Checkbox onChange={(e) => checkItems(e,row, index)} />
-                </td>
-                <td className='col-md-2'>
-                   {row.projectCode}
-
-                </td>
-                <td className='col-md-2'>
-                    <div className="container">
+          <table class="table table-bordered text-center">
+            <thead className='table-secondary'>
+              <tr className='bg-primary'>
+                <th className='col-md-1'>Select</th>
+                <th className='col-md-2'>ProjectCode</th>
+                <th className='col-md-2'>JobCode</th>
+                <th className='col-md-2'>Emp name</th>
+                <th className='col-md-1'>Total</th>
+                <th className='col-md-1' >ViewDetails</th>
+                <th className='col-md-2' >Comments</th>
+              </tr>
+            </thead>
+            <tbody id="table-body">
+              {rowsData && rowsData.length > 0 ? rowsData.map((row, index) => {
+                return (
+                  <tr>
+                    <td className='col-md-1'>
+                      <Checkbox onChange={(e) => checkItems(e, row, index)} />
+                    </td>
+                    <td className='col-md-2'>
+                      {row.projectCode}
+                    </td>
+                    <td className='col-md-2'>
+                      <div className="container">
                         <div className="row justify-content-md-center">
-                            <div className="col-md-12 input">
+                          <div className="col-md-12 input">
                             {row.jobCode}
-                            </div>
-                            
+                          </div>
                         </div>
-                    </div>
-                </td>
-                <td className='col-md-2'>
-                    <div className="container">
+                      </div>
+                    </td>
+                    <td className='col-md-2'>
+                      <div className="container">
                         <div className="row justify-content-md-center">
-                            <div className="col-md-12 input">
-                          {row.empName}
-                            </div>
-                           
+                          <div className="col-md-12 input">
+                            {row.empName}
+                          </div>
                         </div>
-                    </div>
-                </td>
-                <td className='col-md-1'>{row.total}</td>
-
-                <td className='col-md-1'>
-                <div className="container">
+                      </div>
+                    </td>
+                    <td className='col-md-1'>{row.total}</td>
+                    <td className='col-md-1'>
+                      <div className="container">
                         <div className="row justify-content-md-center">
-                            <div className="col-md-12 input">
+                          <div className="col-md-12 input">
                             <Button onClick={(e) => detailView(row)}><RemoveRedEyeIcon /></Button>
-                            </div>
-                           
+                          </div>
+
                         </div>
-                    </div>
-                </td>
-               
-                <td className='col-md-2'>
-                <div className="container">
+                      </div>
+                    </td>
+                    <td className='col-md-2'>
+                      <div className="container">
                         <div className="row justify-content-md-center">
-                            <div className="col-md-12 input">
-                            <input type="text" style={{width: "100%"}} onChange={(e, i) => trigger(row, e)} />
-                            </div>
-                        
+                          <div className="col-md-12 input">
+                            <input type="text" style={{ width: "100%" }} onChange={(e, i) => trigger(row, e)} />
+                          </div>
                         </div>
-                    </div>
-                </td>
-               
-                
-            </tr>
-        )
-    })
-  : <p className="noData">No Data</p>}
-   
-    
-</tbody>
-</table>
-
-
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })
+                : <p className="noData">No Data</p>}
+            </tbody>
+          </table>
         </Box>
       </div>
     </div>
